@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "calibrator", "ConsoleApp1\calibrator.csproj", "{9F6EC054-8DE4-4E12-9D1D-21EE2BCE8050}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "calibrator", "calibratorApp\calibrator.csproj", "{9F6EC054-8DE4-4E12-9D1D-21EE2BCE8050}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
