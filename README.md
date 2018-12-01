@@ -6,7 +6,7 @@ exposed during the 2018 [Advent Of Code](https://adventofcode.com/2018) coding c
 All source was worked out using C# (unless otherwise indicated).
 
 ### Day 1: Chronal Calibration
-[Challenge](https://github.com/anibalvelarde/aoc-2018/tree/master/calibrator/calibratorApp) / [Solution](https://github.com/anibalvelarde/aoc-2018/tree/master/calibrator/calibratorApp)
+[Challenge](https://adventofcode.com/2018/day/1) / [Solution](https://github.com/anibalvelarde/aoc-2018/tree/master/calibrator/calibratorApp)
 The interesting things I learned were:
 - Difference between List<>, ArrayList and SortedList
 - Leveraging lambda expressions
