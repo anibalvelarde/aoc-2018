@@ -41,15 +41,15 @@ namespace checksum.tests
         public void should_return_string_with_common_characters()
         {
             // Arange
-            var string1 = "fghijmpa";
-            var string2 = "fguijmpb";
+            var string1 = "fghijmpd";
+            var string2 = "fguijmpd";
             var checker = new StringyComparer(string1, string2);
 
             // Act
             var commons = checker.ExtractCommonCharacters();
 
             // Assert
-            Assert.AreEqual("fgijmp", commons);
+            Assert.AreEqual("fgijmpd", commons);
         }
     }
 }

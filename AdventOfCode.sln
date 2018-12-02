@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "calibrator", "calibrator\calibrator.csproj", "{9F6EC054-8DE4-4E12-9D1D-21EE2BCE8050}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "calibrator", "calibrator\calibratorApp\calibrator.csproj", "{9F6EC054-8DE4-4E12-9D1D-21EE2BCE8050}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "checksum", "checksum\checksum.csproj", "{614050B3-D15E-4921-B14D-1BB5B9F70906}"
 EndProject
