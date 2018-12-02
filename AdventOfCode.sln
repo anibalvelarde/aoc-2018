@@ -14,6 +14,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "checksum.tests", "checksum.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "checksum.lib", "checksum.lib\checksum.lib.csproj", "{AA07620A-8F15-46AD-AECE-29493CC593E5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Day1", "Day1", "{796BF030-A388-4086-8DC8-630330027254}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Day2", "Day2", "{DAEF7919-5817-42C7-ADB0-E0063A30A990}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9F6EC054-8DE4-4E12-9D1D-21EE2BCE8050} = {796BF030-A388-4086-8DC8-630330027254}
+		{614050B3-D15E-4921-B14D-1BB5B9F70906} = {DAEF7919-5817-42C7-ADB0-E0063A30A990}
+		{D3FB61AF-6D1A-4E4E-83D7-9522165A5AE1} = {DAEF7919-5817-42C7-ADB0-E0063A30A990}
+		{AA07620A-8F15-46AD-AECE-29493CC593E5} = {DAEF7919-5817-42C7-ADB0-E0063A30A990}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1D836160-69FC-4639-97C3-503DA12E68C4}
