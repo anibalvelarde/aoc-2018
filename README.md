@@ -19,3 +19,11 @@ The interesting things I learned:
 - [Unit Tests](https://github.com/anibalvelarde/aoc-2018/tree/master/checksum.tests) helped me a ton. I'll try using those in future solutions
 - Need to do more research on C# [HashSet](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.hashset-1?view=netframework-4.7.2) types.
 
+### Day 3: Acres of Material!
+[Challenge]() / [C# Solution]()
+The interesting things I learned:
+- How to extract parts of a string with RegEx
+- Manipulating 2 dim arrays of a custom object type
+- Manging offsets for x & y coordinates
+- Paying very close attention to requirements is helping to reduce errors
+
