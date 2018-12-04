@@ -20,7 +20,7 @@ The interesting things I learned:
 - Need to do more research on C# [HashSet](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.hashset-1?view=netframework-4.7.2) types.
 
 ### Day 3: Acres of Material!
-[Challenge]() / [C# Solution]()
+[Challenge](https://adventofcode.com/2018/day/3) / [C# Solution](https://github.com/anibalvelarde/aoc-2018/blob/master/cuttingFabric/Program.cs)
 The interesting things I learned:
 - How to extract parts of a string with RegEx
 - Manipulating 2 dim arrays of a custom object type
