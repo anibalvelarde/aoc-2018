@@ -23,4 +23,7 @@ The interesting things I learned:
 [Challenge]() / [C# Solution]()
 The interesting things I learned:
 - How to extract parts of a string with RegEx
+- Manipulating 2 dim arrays of a custom object type
+- Manging offsets for x & y coordinates
+- Paying very close attention to requirements is helping to reduce errors
 
