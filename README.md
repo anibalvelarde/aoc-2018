@@ -27,3 +27,15 @@ The interesting things I learned:
 - Manging offsets for x & y coordinates
 - Paying very close attention to requirements is helping to reduce errors
 
+### Day 4: The Writing is On The Wall
+[Challenge](https://adventofcode.com/2018/day/4) / [Solution](https://github.com/anibalvelarde/aoc-2018/tree/master/Day4)
+The interesting things I learned:
+- Read, re-read and understand instructions
+- More interesting regex manipulation
+- C#'s TimeSpan() class
+- SortedList is a timesaver when needing to order time series
+- Unit testing made it possible to try/re-try many different approaches
+- Model the problem on paper first!
+- Model the problem on paper first!
+- Model the problem on paper first!
+
