@@ -7,7 +7,7 @@
     <ProjectGuid>{95B97965-0409-40F9-B4F2-E03FA1D81495}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>sleepingGuardHabits.tests</RootNamespace>
+    <RootNamespace>SleepingGuardHabits.tests</RootNamespace>
     <AssemblyName>sleepingGuardHabits.tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -48,14 +48,16 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="SleepingGuardHabitsFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="data\testData.txt" />
+    <Content Include="data\testData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\sleepingGuardHabits.lib\sleepingGuardHabits.lib.csproj">

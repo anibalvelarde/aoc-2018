@@ -49,7 +49,18 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="data\sleepingGuardHabits.txt" />
+    <Content Include="data\sleepingGuardHabits.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\OrderedData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\sleepingGuardHabits.lib\sleepingGuardHabits.lib.csproj">
+      <Project>{7513b884-da32-41f6-b32d-4a73078dfa66}</Project>
+      <Name>sleepingGuardHabits.lib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
