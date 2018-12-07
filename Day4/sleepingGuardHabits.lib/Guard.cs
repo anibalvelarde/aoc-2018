@@ -89,7 +89,7 @@ namespace SleepingGuardHabits.lib
 
         private CommonMinute FindMostCommonMinuteToBeAsleep(int[] minutes)
         {
-            int maxMinunte = -1; CommonMinute cm = new CommonMinute();
+            CommonMinute cm = new CommonMinute();
 
             for (int i = 0; i < 60; i++)
             {

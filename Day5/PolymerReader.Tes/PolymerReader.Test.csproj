@@ -7,7 +7,7 @@
     <ProjectGuid>{AA53208E-18A1-4742-8A42-EA4CB7D608F4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PolymerReader.Tes</RootNamespace>
+    <RootNamespace>PolymerReader.Test</RootNamespace>
     <AssemblyName>PolymerReader.Test</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
