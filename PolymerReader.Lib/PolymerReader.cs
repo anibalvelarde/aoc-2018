@@ -19,7 +19,7 @@ namespace PolymerReader.Lib
         public PolymerReader(string polymer)
         {
             LoadPolarityCheckers();
-            this.polymer = polymer;
+            this.polymer = this.CleanUpPolymer(polymer);
         }
 
         public string Trigger()
@@ -28,21 +28,26 @@ namespace PolymerReader.Lib
             var length = polymerFrag.Length;
             var sb = new StringBuilder();
             var lastUnit = '\0';
-            var annihilations = 0;
+            var annihilations = 0; var noAnnihilations = 0;
 
             for (int i = 1; i < length; i++)
             {
                 if (!annihilate(lastUnit.Equals(_nullUnit) ? polymerFrag[i - 1] : lastUnit, polymerFrag[i]))
                 {
-                    if (sb.Length.Equals(0)) sb.Append(polymerFrag[i - 1]);
+                    if (sb.Length.Equals(0) && i<=1) sb.Append(polymerFrag[i - 1]);
                     sb.Append(polymerFrag[i]);
                     lastUnit = polymerFrag[i];
+                    noAnnihilations++;
                 } else
                 {
                     annihilations++;
                     if (lastUnit.Equals(_nullUnit))
                     {
                         i++;
+                        if (i.Equals(length - 1))
+                        {
+                            sb.Append(polymerFrag[i]);
+                        }
                     } else
                     {
                         sb.Remove(sb.Length - 1, 1);
@@ -56,7 +61,11 @@ namespace PolymerReader.Lib
                     }
                 }
             }
-            Console.WriteLine($"Had [{annihilations}] annihilations.");
+            Console.WriteLine("---------------------------------------------------");
+            Console.WriteLine($"With length: [{length}]:");
+            Console.WriteLine($"o   Had [{annihilations}] annihilations.");
+            Console.WriteLine($"o   Had [{noAnnihilations}] non-annihilations.");
+            Console.WriteLine("---------------------------------------------------");
             return sb.ToString();
         }
 
@@ -89,6 +98,19 @@ namespace PolymerReader.Lib
                     //Console.WriteLine($"x is [{x}] x.ToLower is [{x.ToString().ToUpper()}] v is [{v}]");
                     return x.ToString().ToUpper().Equals(v.ToString());
                 }));
+        }
+
+        private string CleanUpPolymer(string str)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in str)
+            {
+                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_')
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
         }
     }
 }
