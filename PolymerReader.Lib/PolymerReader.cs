@@ -25,52 +25,53 @@ namespace PolymerReader.Lib
         public string Trigger()
         {
             var polymerFrag = this.polymer.ToCharArray();
-            var l = polymerFrag.Length;
+            var length = polymerFrag.Length;
+            var sb = new StringBuilder();
+            var lastUnit = '\0';
+            var annihilations = 0;
 
-            for (int i = 0; i < l; i += 4)
+            for (int i = 1; i < length; i++)
             {
-                char prev = polymer[i];
-                char current = i < (l - 1) ? polymerFrag[i + 1] : _nullUnit;
-                char next = i < (l - 2) ? polymerFrag[i + 2] : _nullUnit;
-                char nextNext = i < (l - 3) ? polymerFrag[i + 3] : _nullUnit;
-
-                if (annihilate(current,next))
+                if (!annihilate(lastUnit.Equals(_nullUnit) ? polymerFrag[i - 1] : lastUnit, polymerFrag[i]))
                 {
-                    polymerFrag[i + 1] = _nullUnit;
-                    polymerFrag[i + 2] = _nullUnit;
-
-                    if (annihilate(prev, nextNext))
-                    {
-                        polymerFrag[i] = _nullUnit;
-                        polymerFrag[i + 3] = _nullUnit;
-                    }
-                } else if (annihilate(prev, current))
+                    if (sb.Length.Equals(0)) sb.Append(polymerFrag[i - 1]);
+                    sb.Append(polymerFrag[i]);
+                    lastUnit = polymerFrag[i];
+                } else
                 {
-                    polymerFrag[i] = _nullUnit;
-                    polymerFrag[i + 1] = _nullUnit;
-
-                    if (annihilate(next, nextNext))
+                    annihilations++;
+                    if (lastUnit.Equals(_nullUnit))
                     {
-                        polymerFrag[i + 2] = _nullUnit;
-                        polymerFrag[i + 3] = _nullUnit;
+                        i++;
+                    } else
+                    {
+                        sb.Remove(sb.Length - 1, 1);
+                        if (sb.Length.Equals(0))
+                        {
+                            lastUnit = _nullUnit;
+                        } else
+                        {
+                            lastUnit = sb.ToString().Last();
+                        }
                     }
-                } 
+                }
             }
-
-            return new string(polymerFrag).Replace('\0'.ToString(), string.Empty);
+            Console.WriteLine($"Had [{annihilations}] annihilations.");
+            return sb.ToString();
         }
 
         private bool annihilate(char a, char b)
         {
+            bool willAnnihilate = false;
             if (_lowerPolarity.ContainsKey(a))
             {
-                return _lowerPolarity[a].Equals(b);
+                willAnnihilate = _lowerPolarity[a].Equals(b);
             }
-            if (_upperPolarity.ContainsKey(b))
+            if (_upperPolarity.ContainsKey(a))
             {
-                return _upperPolarity[b].Equals(a);
+                willAnnihilate = _upperPolarity[a].Equals(b);
             }
-            return false;
+            return willAnnihilate;
         }
 
         private void LoadPolarityCheckers()

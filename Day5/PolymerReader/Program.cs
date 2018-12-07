@@ -11,7 +11,21 @@ namespace PolymerReader
     {
         static void Main(string[] args)
         {
-            string contents = File.ReadAllText(@"data\PolymerData.txt");
+            string polymer = File.ReadAllText(@"data\PolymerData.txt");
+            var pr = new PolymerReader.Lib.PolymerReader(polymer);
+
+            // act
+            string reactedPolymer = pr.Trigger();
+
+            Console.WriteLine("------------------------------------------------------");
+            Console.WriteLine($"The resulting polymer has [{reactedPolymer.Length}] units.");
+            Console.WriteLine("------------------------------------------------------");
+            Console.WriteLine("    P   O   L   Y   M   E   R");
+            Console.WriteLine("------------------------------------------------------");
+            Console.WriteLine(reactedPolymer);
+            Console.WriteLine("------------------------------------------------------");
+            Console.ReadKey();
+
         }
     }
 }
