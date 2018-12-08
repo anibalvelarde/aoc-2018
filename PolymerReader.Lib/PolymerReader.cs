@@ -154,12 +154,5 @@ namespace PolymerReader.Lib
             }
             return sb.ToString();
         }
-
-        private string ReverseString(string polymer)
-        {
-            var a = polymer.ToCharArray();
-            Array.Reverse(a);
-            return new string(a);
-        }
     }
 }
