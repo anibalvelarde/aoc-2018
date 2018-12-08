@@ -15,9 +15,18 @@ namespace PolymerReader.Lib
         public string polymer { get; set; }
         private Dictionary<char, char> _upperPolarity;
         private Dictionary<char, char> _lowerPolarity;
-        
+        private char removeThis;
+
         public PolymerReader(string polymer)
         {
+            removeThis = _nullUnit;
+            LoadPolarityCheckers();
+            this.polymer = this.CleanUpPolymer(polymer);
+        }
+
+        public PolymerReader(string polymer, char removeThis)
+        {
+            this.removeThis = removeThis;
             LoadPolarityCheckers();
             this.polymer = this.CleanUpPolymer(polymer);
         }
@@ -64,8 +73,11 @@ namespace PolymerReader.Lib
                         if(annihilate(topOfStack,lastUnit))
                         {
                             annihilations++;
-                            gStack.Pop();
-                           if (gStack.Count>0) topOfStack = gStack.Peek();
+                            if (gStack.Count > 0)
+                            {
+                                gStack.Pop();
+                                topOfStack = gStack.Count>0 ? gStack.Peek() : _nullUnit;
+                            }
                             lastUnit = _nullUnit;
                             currentUnit = _nullUnit;
                         } else
@@ -79,12 +91,6 @@ namespace PolymerReader.Lib
                     }
                 }
             }
-
-            Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine($"With length: [{length}]:");
-            Console.WriteLine($"o   Had [{annihilations}] annihilations.");
-            Console.WriteLine($"o   Had [{noAnnihilations}] non-annihilations.");
-            Console.WriteLine("---------------------------------------------------");
 
             return new string(gStack.ToArray());
         }
@@ -127,7 +133,23 @@ namespace PolymerReader.Lib
             {
                 if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_')
                 {
-                    sb.Append(c);
+                    if (!this.removeThis.Equals(_nullUnit))
+                    {
+                        var low = this.removeThis.ToString().ToLower().ToCharArray()[0];
+                        var up = this.removeThis.ToString().ToUpper().ToCharArray()[0];
+
+                        if (c.Equals(low) || c.Equals(up))
+                        {
+                            // do nothing!
+                        }
+                        else
+                        {
+                            sb.Append(c);
+                        }
+                    } else
+                    {
+                        sb.Append(c);
+                    }
                 }
             }
             return sb.ToString();

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PolymerReader.Lib;
 
@@ -102,6 +104,29 @@ namespace PolymerReader.Test
 
             // assert
             Assert.AreEqual(expPolymer, reactedPolymer);
+        }
+
+        [TestMethod]
+        public void should_find_unit_to_remove_to_optimize_collapse_of_polymer()
+        {
+            var toRemove = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
+            var polymer = "dabAcCaCBAcCcaDA";
+            var reduxResult = new Dictionary<char, int>();
+
+            foreach (char removeThis in toRemove)
+            {
+                var pr = new PolymerReader.Lib.PolymerReader(polymer, removeThis);
+                var reactedPolymer = pr.Trigger();
+
+                reduxResult.Add(removeThis, reactedPolymer.Length);
+            }
+
+            KeyValuePair<char,int> seedKey = new KeyValuePair<char, int>('\0',int.MaxValue);
+            var optimal = reduxResult.Aggregate(seedKey, (optimalObs, nextObs) =>
+            {
+                return nextObs.Value < optimalObs.Value ? nextObs : optimalObs;
+            });
+            Console.WriteLine($"The key [{optimal.Key}] yields the smallest polymer units at [{optimal.Value}].");
         }
     }
 }
