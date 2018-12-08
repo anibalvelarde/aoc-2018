@@ -9,11 +9,11 @@ namespace PolymerReader.Test
     {
         private string[] testPolymersThatCollapseToNothing =
         {
-            "aA", "bB", "cC", "dD", "eE", "fF", "gG", "hH", "iI", "jJ", "kK", "lL",
-            "mM", "nN", "oO", "pP", "qQ", "rR", "sS", "tT", "uU", "vV", "xX", "yY", "zZ",
+            "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ",
+            "abcdefghijklmnopqrstuvwxyzZYXWVUTSRQPONMLKJIHGFEDCBA",
             "abBA",
-            "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVxXyYzZ",
-            "abcdefghijklmnopqrstuvwxyzZYXWVUTSRQPONMLKJIHGFEDCBA"
+            "aA", "bB", "cC", "dD", "eE", "fF", "gG", "hH", "iI", "jJ", "kK", "lL",
+            "mM", "nN", "oO", "pP", "qQ", "rR", "sS", "tT", "uU", "vV", "xX", "yY", "zZ"
         };
 
         private string[] testPolymersThatAreNotCollapsable =
@@ -65,42 +65,6 @@ namespace PolymerReader.Test
         }
 
         [TestMethod]
-        public void should_collapse_to_single_value()
-        {
-            foreach (var polymer in testPolymersThatCollapseToNothing)
-            {
-                // arrange
-                string newPolymer = polymer + "p";
-                var pr = new PolymerReader.Lib.PolymerReader(newPolymer);
-
-                // act
-                string reactedPolymer = pr.Trigger();
-
-                // assert
-                Assert.AreEqual("p", reactedPolymer);
-
-            }
-        }
-
-        [TestMethod]
-        public void should_collapse_to_two_units()
-        {
-            foreach (var polymer in testPolymersThatCollapseToNothing)
-            {
-                // arrange
-                string newPolymer = "p" + polymer + "p";
-                var pr = new PolymerReader.Lib.PolymerReader(newPolymer);
-
-                // act
-                string reactedPolymer = pr.Trigger();
-
-                // assert
-                Assert.AreEqual("pp", reactedPolymer);
-
-            }
-        }
-
-        [TestMethod]
         public void should_collapse_polymer_correctly_to_some_units()
         {
             // arrange 
@@ -129,7 +93,7 @@ namespace PolymerReader.Test
         [TestMethod]
         public void should_reduce_polymer_correctly()
         {
-            // arrange 
+            // arrange        dabAcCaCBAcCcaDA
             string polymer = "dabAcCaCBAcCcaDA"; var expPolymer = "dabCBAcaDA";
             var pr = new PolymerReader.Lib.PolymerReader(polymer);
 

@@ -26,47 +26,67 @@ namespace PolymerReader.Lib
         {
             var polymerFrag = this.polymer.ToCharArray();
             var length = polymerFrag.Length;
-            var sb = new StringBuilder();
-            var lastUnit = '\0';
             var annihilations = 0; var noAnnihilations = 0;
+            var lastUnit = _nullUnit;
+            var topOfStack = _nullUnit;
 
-            for (int i = 1; i < length; i++)
+            var pStack = new Stack<char>(polymerFrag);
+            var gStack = new Stack<char>();
+
+            while (pStack.Count>0)
             {
-                if (!annihilate(lastUnit.Equals(_nullUnit) ? polymerFrag[i - 1] : lastUnit, polymerFrag[i]))
+                var stack = new string(gStack.ToArray());
+                var currentUnit = pStack.Pop();
+
+                if (!lastUnit.Equals(_nullUnit))
                 {
-                    if (sb.Length.Equals(0) && i<=1) sb.Append(polymerFrag[i - 1]);
-                    sb.Append(polymerFrag[i]);
-                    lastUnit = polymerFrag[i];
-                    noAnnihilations++;
-                } else
-                {
-                    annihilations++;
-                    if (lastUnit.Equals(_nullUnit))
+                    if (annihilate(lastUnit, currentUnit))
                     {
-                        i++;
-                        if (i.Equals(length - 1))
-                        {
-                            sb.Append(polymerFrag[i]);
-                        }
+                        annihilations++;
+                        lastUnit = _nullUnit;
+                        currentUnit = _nullUnit;
                     } else
                     {
-                        sb.Remove(sb.Length - 1, 1);
-                        if (sb.Length.Equals(0))
+                        noAnnihilations++;
+                        gStack.Push(lastUnit);
+                        topOfStack = lastUnit;
+                        lastUnit = currentUnit;
+                        if (pStack.Count.Equals(0)) gStack.Push(lastUnit);
+                    }
+                } else
+                {
+                    lastUnit = currentUnit;
+                    if (topOfStack.Equals(_nullUnit))
+                    {
+                        noAnnihilations++;
+                    } else
+                    {
+                        if(annihilate(topOfStack,lastUnit))
                         {
+                            annihilations++;
+                            gStack.Pop();
+                           if (gStack.Count>0) topOfStack = gStack.Peek();
                             lastUnit = _nullUnit;
+                            currentUnit = _nullUnit;
                         } else
                         {
-                            lastUnit = sb.ToString().Last();
+                            noAnnihilations++;
+                            gStack.Push(lastUnit);
+                            topOfStack = lastUnit;
+                            lastUnit = _nullUnit;
+                            currentUnit = _nullUnit;
                         }
                     }
                 }
             }
+
             Console.WriteLine("---------------------------------------------------");
             Console.WriteLine($"With length: [{length}]:");
             Console.WriteLine($"o   Had [{annihilations}] annihilations.");
             Console.WriteLine($"o   Had [{noAnnihilations}] non-annihilations.");
             Console.WriteLine("---------------------------------------------------");
-            return sb.ToString();
+
+            return new string(gStack.ToArray());
         }
 
         private bool annihilate(char a, char b)
@@ -111,6 +131,13 @@ namespace PolymerReader.Lib
                 }
             }
             return sb.ToString();
+        }
+
+        private string ReverseString(string polymer)
+        {
+            var a = polymer.ToCharArray();
+            Array.Reverse(a);
+            return new string(a);
         }
     }
 }
