@@ -18,22 +18,15 @@ T	 	Z
 
 
 
-
-ODJSAPCEWQNHZF
-
-UGLTKDJVBRMISAPCEWQNHZF
-
-XSAPCEWQNHZF
-
-YPEQNHZF
+Origin vertex [O] yields this result [O    DJ     SAPCEWQNHZF].
+Origin vertex [U] yields this result [UGLTKDJVBRMISAPCEWQNHZF].
+Origin vertex [X] yields this result [X           SAPCEWQNHZF].
+Origin vertex [Y] yields this result [Y             P E QNHZF].
 
 
-ODJSAPCEWQNHZF
+O    DJ     SAPCEWQNHZF
 
-UGLTKVBRMI
 
-X
+Correct Answer:
 
-Y
-
-ODJSAPCEWQNHZFUGLTKVBRMIXY
+OUGLTKDJVBRMIXSACWYPEQNHZF
