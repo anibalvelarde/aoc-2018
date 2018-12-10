@@ -11,6 +11,8 @@ namespace DirectedGraph.Lib
     public class Graph
     {
         public Dictionary<char,Vertex> Vertices = new Dictionary<char, Vertex>();
+        public SortedList<char, Vertex> AvailableSteps = new SortedList<char, Vertex>();
+        private string _orderOfSteps = "";
 
         public void AddStatement(string s)
         {
@@ -22,46 +24,89 @@ namespace DirectedGraph.Lib
             if (!Vertices.ContainsKey(v2)) Vertices.Add(v2, new Vertex(v2));
 
             Vertices[v2].AddDependency(Vertices[v1]);
-            Vertices[v1].NeededBy(Vertices[v2]);
+            Vertices[v1].AddNeededBy(Vertices[v2]);
         }
 
         public string GetPrecedenceSequence()
         {
-            var leaves = GetLeafNodes();
-            List<Vertex> origins = GetOriginPoints();
-            string seq = origins.Aggregate("", (acc, v) =>
+            LoadStartingSteps();
+            while (AvailableSteps.Count > 0)
             {
-                var sb = new StringBuilder();
-                var steps = v.GetPrecedenceSequence(new List<char>());
-                sb.Append(steps.ToArray());
-                var result = sb.ToString();
-                Console.WriteLine($"Origin vertex [{v.Id}] yields this result [{result}].");
-                return result;
-            });
-
-            return seq;
+                var nextStep = GetNextStep();
+                if (IsIncludedInOrderOfSteps(nextStep))
+                {
+                    _orderOfSteps += nextStep.Id.ToString();
+                    Console.WriteLine(_orderOfSteps);
+                }
+                foreach (var step in nextStep.NeededBy)
+                {
+                    if (IsIncludedInOrderOfSteps(step.Value) && 
+                        !AvailableSteps.ContainsKey(step.Key))
+                    {
+                        AvailableSteps.Add(step.Key, step.Value);
+                    }
+                }
+            }
+            return _orderOfSteps;
         }
 
-        private string ReverseString(string polymer)
+        private bool IsIncludedInOrderOfSteps(Vertex nextStep)
         {
-            var a = polymer.ToCharArray();
-            Array.Reverse(a);
-            return new string(a);
+            return !_orderOfSteps.Contains(nextStep.Id);
         }
 
-        private List<Vertex> GetOriginPoints()
+        private Vertex GetNextStep()
         {
-            return Vertices
-                    .Where(v => !v.Value.HasDependencies())
+            Vertex nextStep = AvailableSteps.First().Value;
+            foreach (var nextStepCandidate in AvailableSteps)
+            {
+                if (ReadyToAssembleStep(nextStepCandidate.Value))
+                {
+                    nextStep = nextStepCandidate.Value;
+                    AvailableSteps.Remove(nextStep.Id);
+                    break;
+                }
+            }
+            return nextStep;
+        }
+
+        private bool ReadyToAssembleStep(Vertex v)
+        {
+            bool stepIsReady = true;
+            foreach (var dep in v.DependencyList)
+            {
+                if (!_orderOfSteps.Contains(dep.Key))
+                {
+                    stepIsReady = false;
+                    break;
+                }
+            }
+            return stepIsReady;
+        }
+
+        private void LoadStartingSteps()
+        {
+            var startingSteps = Vertices
+                    .Where(v => !v.Value.HasDependencies)
                     .Select(noDepKeyValPair => noDepKeyValPair.Value)
                     .OrderBy(i => i.Id)
                     .ToList();
+            foreach (var s in startingSteps)
+            {
+                if (AvailableSteps.ContainsKey(s.Id))
+                {
+                    // step is already in the list - do nothing
+                } else
+                {
+                    AvailableSteps.Add(s.Id, s);
+                }
+            }
         }
 
         private List<Vertex> GetLeafNodes()
         {
             var listOfLeafNodes = Vertices
-                    .Where(v => !v.Value.IsNeededByOthers())
+                    .Where(v => !v.Value.IsNeededByAnyStep)
                     .Select(leafNodeKvp => leafNodeKvp.Value)
                     .OrderBy(i => i.Id)
                     .ToList();

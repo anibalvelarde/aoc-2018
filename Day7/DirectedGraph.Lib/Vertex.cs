@@ -15,59 +15,47 @@ namespace DirectedGraph.Lib
             this.Id = id;
         }
         public char Id { get; private set; }
-        public SortedList<char, Vertex> StepsNeeded { get; internal set; }
 
         public void AddDependency(Vertex v)
         {
             _dependencies.Add(v.Id, v);
         }
 
-        public bool DependsOn(Vertex v)
-        {
-            return !_dependencies.FirstOrDefault(x => x.Equals(v)).Equals(null);
-        }
-
-        public bool HasDependencies()
-        {
-            return !_dependencies.Count.Equals(0);
-        }
-
-        public bool IsNeededByOthers()
-        {
-            return !_neededBy.Count.Equals(0);
-        }
-
-        internal void NeededBy(Vertex v)
+        public void AddNeededBy(Vertex v)
         {
             _neededBy.Add(v.Id, v);
         }
 
-        internal List<char> GetPrecedenceSequence(List<char> initialSequence)
+        public SortedList<char,Vertex> DependencyList
         {
-            var origins = GetOriginPoints();
-            List<char> seq = origins.Aggregate(initialSequence, (acc, v) =>
+            get
             {
-                return v.GetPrecedenceSequence(acc);
-            });
-            return AddSelf(seq);
-        }
-
-        private List<char> AddSelf(List<char> seq)
-        {
-            if (!seq.Contains(this.Id))
-            {
-                seq.Insert(0, this.Id);
+                return _dependencies;
             }
-            return seq;
         }
 
-        private List<Vertex> GetOriginPoints()
+        public bool HasDependencies
         {
-            return _neededBy
-                    .Where(v => v.Value.DependsOn(this))
-                    .Select(dependency => dependency.Value)
-                    .OrderByDescending(x => x.Id)
-                    .ToList();
+            get
+            {
+                return _dependencies.Count > 0;
+            }
+        }
+
+        public SortedList<char, Vertex> NeededBy
+        {
+            get
+            {
+                return _neededBy;
+            }
+        }
+
+        public bool IsNeededByAnyStep
+        {
+            get
+            {
+                return _neededBy.Count > 0;
+            }
         }
     }
 }
