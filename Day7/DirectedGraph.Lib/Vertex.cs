@@ -13,8 +13,12 @@ namespace DirectedGraph.Lib
         public Vertex(char id)
         {
             this.Id = id;
+            this.IsDone = false;
+            this.DidWorkStart = false;
         }
         public char Id { get; private set; }
+        public bool IsDone { get; set; }
+        public bool DidWorkStart { get; set; }
 
         public void AddDependency(Vertex v)
         {

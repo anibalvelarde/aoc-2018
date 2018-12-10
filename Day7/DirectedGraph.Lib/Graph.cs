@@ -12,7 +12,9 @@ namespace DirectedGraph.Lib
     {
         public Dictionary<char,Vertex> Vertices = new Dictionary<char, Vertex>();
         public SortedList<char, Vertex> AvailableSteps = new SortedList<char, Vertex>();
+        public List<Worker> _workers = new List<Worker>();
         private string _orderOfSteps = "";
+        private int _ticks = 0;
 
         public void AddStatement(string s)
         {
@@ -30,13 +32,18 @@ namespace DirectedGraph.Lib
         public string GetPrecedenceSequence()
         {
             LoadStartingSteps();
+            SetupWorkers(2);
             while (AvailableSteps.Count > 0)
             {
                 var nextStep = GetNextStep();
+                AssignWork(nextStep);
                 if (IsIncludedInOrderOfSteps(nextStep))
                 {
-                    _orderOfSteps += nextStep.Id.ToString();
-                    Console.WriteLine(_orderOfSteps);
+                    if (nextStep.IsDone)
+                    {
+                        _orderOfSteps += nextStep.Id.ToString();
+                        Console.WriteLine(_orderOfSteps);
+                    }
                 }
                 foreach (var step in nextStep.NeededBy)
                 {
@@ -46,8 +53,55 @@ namespace DirectedGraph.Lib
                         AvailableSteps.Add(step.Key, step.Value);
                     }
                 }
+                IncreaseByOneTick();
             }
             return _orderOfSteps;
+        }
+
+        private void AssignWork(Vertex nextStep)
+        {
+            if (ReadyToAssembleStep(nextStep))
+            {
+                var w = GetNextIdleWorker();
+                if (w is null)
+                {
+                    // do nothing
+                }
+                else
+                {
+                    if (!nextStep.DidWorkStart)
+                    {
+                        nextStep.DidWorkStart = true;
+                        w.AssignTask(nextStep);
+                    }
+                } 
+            }
+        }
+
+        private void SetupWorkers(int workerCount, int stepDuration = 1)
+        {
+            for (int i = 0; i < workerCount; i++)
+            {
+                _workers.Add(new Worker(stepDuration));
+            }
+        }
+
+        private void IncreaseByOneTick()
+        {
+            _ticks++;
+            foreach (var w in _workers)
+            {
+                w.Tick();
+            }
+        }
+
+        private Worker GetNextIdleWorker()
+        {
+            foreach (var w in _workers)
+            {
+                if (w.NotBusy()) return w;
+            }
+            return null;
         }
 
         private bool IsIncludedInOrderOfSteps(Vertex nextStep)
@@ -63,15 +117,18 @@ namespace DirectedGraph.Lib
                 if (ReadyToAssembleStep(nextStepCandidate.Value))
                 {
                     nextStep = nextStepCandidate.Value;
-                    AvailableSteps.Remove(nextStep.Id);
-                    break;
-                }
+                    if (nextStep.IsDone)
+                    {
+                        AvailableSteps.Remove(nextStep.Id);
+                        break;
+                    }                }
             }
             return nextStep;
         }
 
         private bool ReadyToAssembleStep(Vertex v)
         {
+            if (v.DidWorkStart && !v.IsDone) return false;
             bool stepIsReady = true;
             foreach (var dep in v.DependencyList)
             {
@@ -101,22 +158,6 @@ namespace DirectedGraph.Lib
                     AvailableSteps.Add(s.Id, s);
                 }
             }
-        }
-
-        private List<Vertex> GetLeafNodes()
-        {
-            var listOfLeafNodes = Vertices
-                    .Where(v => !v.Value.IsNeededByAnyStep)
-                    .Select(leafNodeKvp => leafNodeKvp.Value)
-                    .OrderBy(i => i.Id)
-                    .ToList();
-
-            foreach (var l in listOfLeafNodes)
-            {
-                Console.WriteLine($"Leaf node: [{l.Id}].");
-            }
-
-            return listOfLeafNodes;
         }
 
         private Match MakePattern(string input)
