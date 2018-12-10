@@ -95,5 +95,23 @@ namespace DirectedGraph.Test
 
             Assert.AreEqual("CABDFE", g.GetPrecedenceSequence());
         }
+
+        [TestMethod]
+        public void should_read_data_correctly_for_multiple_statement_v2()
+        {
+            // Arange
+            var statements = File.ReadAllLines(@"data\TestData2.txt");
+            var g = new Graph();
+
+            foreach (var statement in statements)
+            {
+                // Act
+                g.AddStatement(statement);
+            }
+
+            // Assert
+
+            Assert.AreEqual("CABDFE", g.GetPrecedenceSequence());
+        }
     }
 }

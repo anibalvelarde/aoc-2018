@@ -27,9 +27,14 @@ namespace DirectedGraph.Lib
             return !_dependencies.FirstOrDefault(x => x.Equals(v)).Equals(null);
         }
 
-        public bool HasNoDependencies()
+        public bool HasDependencies()
         {
-            return _dependencies.Count.Equals(0);
+            return !_dependencies.Count.Equals(0);
+        }
+
+        public bool IsNeededByOthers()
+        {
+            return !_neededBy.Count.Equals(0);
         }
 
         internal void NeededBy(Vertex v)
@@ -37,25 +42,23 @@ namespace DirectedGraph.Lib
             _neededBy.Add(v.Id, v);
         }
 
-        internal Stack<char> GetPrecedenceSequence(Stack<char> initialSequence)
+        internal List<char> GetPrecedenceSequence(List<char> initialSequence)
         {
             var origins = GetOriginPoints();
-            Stack<char> seq = origins.Aggregate(initialSequence, (acc, v) =>
+            List<char> seq = origins.Aggregate(initialSequence, (acc, v) =>
             {
-                return v.GetPrecedenceSequence(acc);;
+                return v.GetPrecedenceSequence(acc);
             });
             return AddSelf(seq);
         }
 
-        private Stack<char> AddSelf(Stack<char> seq)
+        private List<char> AddSelf(List<char> seq)
         {
-            var rev = new Stack<char>();
-            while (seq.Count>0)
+            if (!seq.Contains(this.Id))
             {
-                rev.Push(seq.Pop());
+                seq.Insert(0, this.Id);
             }
-            if (!rev.Contains(this.Id)) rev.Push(this.Id);
-            return rev;
+            return seq;
         }
 
         private List<Vertex> GetOriginPoints()
@@ -63,6 +66,7 @@ namespace DirectedGraph.Lib
             return _neededBy
                     .Where(v => v.Value.DependsOn(this))
                     .Select(dependency => dependency.Value)
+                    .OrderByDescending(x => x.Id)
                     .ToList();
         }
     }

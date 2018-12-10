@@ -27,17 +27,16 @@ namespace DirectedGraph.Lib
 
         public string GetPrecedenceSequence()
         {
+            var leaves = GetLeafNodes();
             List<Vertex> origins = GetOriginPoints();
             string seq = origins.Aggregate("", (acc, v) =>
             {
-                var sb = new StringBuilder(acc);
-                var steps = v.GetPrecedenceSequence(new Stack<char>());
-                while (steps.Count > 0)
-                {
-                    var s = steps.Pop();
-                    sb.Append(s);
-                }
-                return sb.ToString();
+                var sb = new StringBuilder();
+                var steps = v.GetPrecedenceSequence(new List<char>());
+                sb.Append(steps.ToArray());
+                var result = sb.ToString();
+                Console.WriteLine($"Origin vertex [{v.Id}] yields this result [{result}].");
+                return result;
             });
 
             return seq;
@@ -53,9 +52,26 @@ namespace DirectedGraph.Lib
         private List<Vertex> GetOriginPoints()
         {
             return Vertices
-                    .Where(v => v.Value.HasNoDependencies())
+                    .Where(v => !v.Value.HasDependencies())
                     .Select(noDepKeyValPair => noDepKeyValPair.Value)
+                    .OrderBy(i => i.Id)
                     .ToList();
+        }
+
+        private List<Vertex> GetLeafNodes()
+        {
+            var listOfLeafNodes = Vertices
+                    .Where(v => !v.Value.IsNeededByOthers())
+                    .Select(leafNodeKvp => leafNodeKvp.Value)
+                    .OrderBy(i => i.Id)
+                    .ToList();
+
+            foreach (var l in listOfLeafNodes)
+            {
+                Console.WriteLine($"Leaf node: [{l.Id}].");
+            }
+
+            return listOfLeafNodes;
         }
 
         private Match MakePattern(string input)

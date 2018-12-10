@@ -55,6 +55,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\TestData2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\TestData.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
