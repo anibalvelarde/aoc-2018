@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,9 @@ namespace DirectedGraph.Lib
     public class Graph
     {
         public Dictionary<char,Vertex> Vertices = new Dictionary<char, Vertex>();
-        public SortedList<char, Vertex> AvailableSteps = new SortedList<char, Vertex>();
+        public SortedList<char, Vertex> ToDo = new SortedList<char, Vertex>();
+        public SortedList<char, Vertex> Doing = new SortedList<char, Vertex>();
+        public List<Vertex> Done = new List<Vertex>();
         public List<Worker> _workers = new List<Worker>();
         private string _orderOfSteps = "";
         private int _ticks = 0;
@@ -29,53 +32,110 @@ namespace DirectedGraph.Lib
             Vertices[v1].AddNeededBy(Vertices[v2]);
         }
 
-        public string GetPrecedenceSequence()
+        public string GetPrecedenceSequence(int workerCount = 2, int timeDialationOffset = 0)
         {
-            LoadStartingSteps();
-            SetupWorkers(2);
-            while (AvailableSteps.Count > 0)
+            Initialize(workerCount, timeDialationOffset);
+            while (ToDo.Count > 0 || Doing.Count > 0)
             {
-                var nextStep = GetNextStep();
-                AssignWork(nextStep);
-                if (IsIncludedInOrderOfSteps(nextStep))
+                if (Done.Count.Equals(26))
                 {
-                    if (nextStep.IsDone)
-                    {
-                        _orderOfSteps += nextStep.Id.ToString();
-                        Console.WriteLine(_orderOfSteps);
-                    }
+                    WorkerReport();
+                    Console.ReadLine();
                 }
-                foreach (var step in nextStep.NeededBy)
-                {
-                    if (IsIncludedInOrderOfSteps(step.Value) && 
-                        !AvailableSteps.ContainsKey(step.Key))
-                    {
-                        AvailableSteps.Add(step.Key, step.Value);
-                    }
-                }
-                IncreaseByOneTick();
+
+                var workers = GetIdleWorkers();
+                List<Vertex> tasks = GetReadyTasks();
+                AssignWork(workers, tasks);
+                NextTimeSlice(workers);
             }
-            return _orderOfSteps;
+            WorkerReport();
+            var result = new string(Done.Select(x => x.Id).ToArray());
+            Console.WriteLine($"Result:  {result}");
+            return result;
         }
 
-        private void AssignWork(Vertex nextStep)
+        private void WorkerReport()
         {
-            if (ReadyToAssembleStep(nextStep))
+            Console.WriteLine("------------------------------------------");
+            foreach (var w in _workers)
             {
-                var w = GetNextIdleWorker();
-                if (w is null)
-                {
-                    // do nothing
-                }
-                else
-                {
-                    if (!nextStep.DidWorkStart)
-                    {
-                        nextStep.DidWorkStart = true;
-                        w.AssignTask(nextStep);
-                    }
-                } 
+                Console.WriteLine($"Worker: {w.GetHashCode()}  [{w.ToString()}]");
             }
+            Console.WriteLine("------------------------------------------");
+            Console.WriteLine($" Total Time: {this._ticks}");
+            Console.WriteLine("------------------------------------------");
+        }
+
+        private List<Vertex> GetReadyTasks()
+        {
+            return ToDo
+                    .Where(ReadyToAssembleStep)
+                    .Select(i => i.Value)
+                    .ToList();
+        }
+
+        private void Initialize(int workerCount, int timeOffset)
+        {
+            LoadStartingSteps();
+            SetupWorkers(workerCount, timeOffset);
+        }
+
+        private void AssignWork(List<Worker> workers, List<Vertex> tasks)
+        {
+            foreach (var w in workers)
+            {
+                if (tasks.Count() > 0)
+                {
+                    var task = tasks.FirstOrDefault(x => !x.DidWorkStart);
+                    if (!(task is null))
+                    {
+                        AssignWork(w, task);
+                    }
+                }
+            }
+        }
+
+        private void AssignWork(Worker w, Vertex nextTask)
+        {
+            if (!nextTask.DidWorkStart)
+            {
+                AnalyzeScheduleTaskDependencies(nextTask);
+                nextTask.DidWorkStart = true;
+                w.AssignTask(nextTask);
+                Doing.Add(nextTask.Id, nextTask);
+                ToDo.Remove(nextTask.Id);
+            }
+        }
+
+        private void AnalyzeScheduleTaskDependencies(Vertex nextTask)
+        {
+            foreach (var need in nextTask.NeededBy)
+            {
+                if (!ToDo.ContainsKey(need.Key))
+                {
+                    ToDo.Add(need.Value.Id, need.Value);
+                }
+            }
+        }
+
+        private bool AnalyzeIsTaskDone(Vertex nextTask)
+        {
+            bool isReallyDone = true;
+            if (nextTask.IsDone)
+            {
+                foreach (var dep in nextTask.DependencyList)
+                {
+                    if (!Done.Contains(dep.Value))
+                    {
+                        isReallyDone = false;
+                        break;
+                    }
+                }
+            } else
+            {
+                isReallyDone = false;
+            }
+            return isReallyDone;
         }
 
         private void SetupWorkers(int workerCount, int stepDuration = 1)
@@ -86,7 +146,25 @@ namespace DirectedGraph.Lib
             }
         }
 
-        private void IncreaseByOneTick()
+        private void NextTimeSlice(List<Worker> workers)
+        {
+            NextTimeSlice();
+            var doneTasks = new List<Vertex>();
+            foreach (var task in Doing)
+            {
+                if (AnalyzeIsTaskDone(task.Value))
+                {
+                    Done.Add(task.Value);
+                    doneTasks.Add(task.Value);
+                }
+            }
+            foreach (var task in doneTasks)
+            {
+                Doing.Remove(task.Id);
+            }
+        }
+
+        private void NextTimeSlice()
         {
             _ticks++;
             foreach (var w in _workers)
@@ -109,30 +187,20 @@ namespace DirectedGraph.Lib
             return !_orderOfSteps.Contains(nextStep.Id);
         }
 
-        private Vertex GetNextStep()
+        private List<Worker> GetIdleWorkers()
         {
-            Vertex nextStep = AvailableSteps.First().Value;
-            foreach (var nextStepCandidate in AvailableSteps)
-            {
-                if (ReadyToAssembleStep(nextStepCandidate.Value))
-                {
-                    nextStep = nextStepCandidate.Value;
-                    if (nextStep.IsDone)
-                    {
-                        AvailableSteps.Remove(nextStep.Id);
-                        break;
-                    }                }
-            }
-            return nextStep;
+            return _workers.Select(i => i)
+                .Where(i => i.NotBusy())
+                .ToList();
         }
 
-        private bool ReadyToAssembleStep(Vertex v)
+        private bool ReadyToAssembleStep(KeyValuePair<char,Vertex> item)
         {
-            if (v.DidWorkStart && !v.IsDone) return false;
+            if (item.Value.DidWorkStart && !item.Value.IsDone) return false;
             bool stepIsReady = true;
-            foreach (var dep in v.DependencyList)
+            foreach (var dep in item.Value.DependencyList)
             {
-                if (!_orderOfSteps.Contains(dep.Key))
+                if (!Done.Contains(dep.Value))
                 {
                     stepIsReady = false;
                     break;
@@ -150,12 +218,12 @@ namespace DirectedGraph.Lib
                     .ToList();
             foreach (var s in startingSteps)
             {
-                if (AvailableSteps.ContainsKey(s.Id))
+                if (ToDo.ContainsKey(s.Id))
                 {
                     // step is already in the list - do nothing
                 } else
                 {
-                    AvailableSteps.Add(s.Id, s);
+                    ToDo.Add(s.Id, s);
                 }
             }
         }

@@ -26,7 +26,7 @@ namespace DirectedGraph.Main
                 statementsCount++;
             }
 
-            var steps = g.GetPrecedenceSequence();
+            var steps = g.GetPrecedenceSequence(5, 60);
             Clipboard.SetText(steps);
             Console.WriteLine($"The order of steps should be: [{steps}].");
             Console.WriteLine($"There were [{statementsCount}] processed.");

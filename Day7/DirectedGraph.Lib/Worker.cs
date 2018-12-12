@@ -10,25 +10,31 @@ namespace DirectedGraph.Lib
     {
         private Dictionary<char,int> taskDuration = new Dictionary<char, int>();
         public int TicksBusy { get; private set; }
-        public int TicksIdle { get; private set; }
-        private int BusyTicks { get; set; }
+        public int IdleTicks { get; private set; }
+        private int WorkingTicks { get; set; }
+        private int TasksProcessed { get; set; }
         public Vertex CurrentTask { get; private set; }
 
         public Worker(int durationOffset = 1)
         {
             InitializeWorker(durationOffset);
             this.TicksBusy = 0;
-            this.TicksIdle = 0;
+            this.IdleTicks = 0;
         }
 
         public bool IsBusy()
         {
-            return BusyTicks > 0;
+            return WorkingTicks > 0;
         }
 
         public bool NotBusy()
         {
             return !IsBusy();
+        }
+
+        public override string ToString()
+        {
+            return $"Task Count: {TasksProcessed}  Busy Time: {TicksBusy} Idle Time: {IdleTicks}";
         }
 
         private void InitializeWorker(int durationOffset)
@@ -50,7 +56,8 @@ namespace DirectedGraph.Lib
             }
             {
                 this.CurrentTask = task;
-                this.BusyTicks = SetDuration();
+                this.WorkingTicks = SetDuration();
+                this.TasksProcessed++;
             }
         }
 
@@ -59,7 +66,7 @@ namespace DirectedGraph.Lib
             if (IsBusy())
             {
                 TicksBusy++;
-                BusyTicks--;
+                WorkingTicks--;
                 if (NotBusy())
                 {
                     CurrentTask.IsDone = true;
@@ -67,7 +74,12 @@ namespace DirectedGraph.Lib
                 }
             } else
             {
-                TicksIdle++;
+                if (!(CurrentTask is null))
+                {
+                    CurrentTask.IsDone = true;
+                    CurrentTask = null;
+                }
+                IdleTicks++;
             }
         }
 

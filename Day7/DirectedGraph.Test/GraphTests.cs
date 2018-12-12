@@ -93,7 +93,7 @@ namespace DirectedGraph.Test
             Assert.IsNotNull(g.Vertices['E']);
             Assert.IsNotNull(g.Vertices['F']);
 
-            Assert.AreEqual("CABDFE", g.GetPrecedenceSequence());
+            Assert.AreEqual("CABFDE", g.GetPrecedenceSequence());
         }
 
         [TestMethod]
@@ -111,7 +111,7 @@ namespace DirectedGraph.Test
 
             // Assert
 
-            Assert.AreEqual("CABDFE", g.GetPrecedenceSequence());
+            Assert.AreEqual("CABFDE", g.GetPrecedenceSequence());
         }
     }
 }
