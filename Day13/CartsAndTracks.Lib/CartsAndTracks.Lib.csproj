@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Cart.cs" />
     <Compile Include="Coordinates.cs" />
+    <Compile Include="CrashDetector.cs" />
     <Compile Include="GridPoint.cs" />
     <Compile Include="Heading.cs" />
     <Compile Include="OpenField.cs" />

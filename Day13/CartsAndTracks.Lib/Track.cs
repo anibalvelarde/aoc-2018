@@ -12,6 +12,7 @@ namespace CartsAndTracks.Lib
         private readonly string _trackFile;
         private GridPoint[,] _grid;
         private List<Cart> _carts = new List<Cart>();
+        private CrashDetector _radar = new CrashDetector();
 
         public Track(string trackFile)
         {
@@ -61,6 +62,23 @@ namespace CartsAndTracks.Lib
                     }
                 }
                 Console.WriteLine("");
+            }
+        }
+
+        public void Tick()
+        {
+            foreach (var cart in _carts)
+            {
+                cart.Move(this);
+            }
+            _radar.DetectCrash(_carts);
+        }
+
+        public void Simulate()
+        {
+            while (!_radar.CrashDetected)
+            {
+                Tick();
             }
         }
 

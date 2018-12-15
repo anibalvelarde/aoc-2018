@@ -26,5 +26,40 @@ namespace CartsAndTracks.Tests
             Assert.IsTrue(t.Carts[1].CurrentPosition.Equals(new Coordinates(5, 0)));
             Assert.AreEqual(Heading.North, t.Carts[1].CurrentHeading);
         }
+
+        [TestMethod]
+        public void should_move_carts_one_step_when_one_tick_happens()
+        {
+            // arrange
+            var t = new Track(@"TestData\StraightLineTrack.txt");
+            t.Load();
+
+            // act
+            t.Tick();
+
+            // assert
+            t.Render();
+            Assert.IsTrue(t.Carts[0].CurrentPosition.Equals(new Coordinates(2, 0)));
+            Assert.AreEqual(Heading.South, t.Carts[0].CurrentHeading);
+            Assert.IsTrue(t.Carts[1].CurrentPosition.Equals(new Coordinates(4, 0)));
+            Assert.AreEqual(Heading.North, t.Carts[1].CurrentHeading);
+        }
+
+        [TestMethod]
+        public void should_move_carts_till_crash_is_detected()
+        {
+            // arrange
+            var t = new Track(@"TestData\StraightLineTrack.txt");
+            t.Load();
+
+            // act
+            t.Simulate();
+
+            // assert
+            t.Render();
+            Assert.IsTrue(t.Carts[0].CurrentPosition.Equals(t.Carts[1].CurrentPosition));
+            Assert.AreEqual(Heading.South, t.Carts[0].CurrentHeading);
+            Assert.AreEqual(Heading.North, t.Carts[1].CurrentHeading);
+        }
     }
 }
