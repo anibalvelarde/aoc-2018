@@ -11,7 +11,7 @@ namespace CartsAndTracks.Tests
         public void should_read_track_data_with_initial_cart_position()
         {
             // arrange
-            var t = new Track(@"TestData\StraightLineTrack.txt");
+            var t = new Track(@"TestData\StraightNorthSouthLineTrack.txt");
 
             // act
             t.Load();
@@ -31,7 +31,7 @@ namespace CartsAndTracks.Tests
         public void should_move_carts_one_step_when_one_tick_happens()
         {
             // arrange
-            var t = new Track(@"TestData\StraightLineTrack.txt");
+            var t = new Track(@"TestData\StraightNorthSouthLineTrack.txt");
             t.Load();
 
             // act
@@ -46,10 +46,10 @@ namespace CartsAndTracks.Tests
         }
 
         [TestMethod]
-        public void should_move_carts_till_crash_is_detected()
+        public void should_move_carts_till_crash_is_detected_on_single_lane_North_Shouth_track()
         {
             // arrange
-            var t = new Track(@"TestData\StraightLineTrack.txt");
+            var t = new Track(@"TestData\StraightNorthSouthLineTrack.txt");
             t.Load();
 
             // act
@@ -60,6 +60,24 @@ namespace CartsAndTracks.Tests
             Assert.IsTrue(t.Carts[0].CurrentPosition.Equals(t.Carts[1].CurrentPosition));
             Assert.AreEqual(Heading.South, t.Carts[0].CurrentHeading);
             Assert.AreEqual(Heading.North, t.Carts[1].CurrentHeading);
+        }
+
+        [TestMethod]
+        public void should_move_carts_till_crash_is_detected_on_single_lane_East_West_track()
+        {
+            // arrange
+            var t = new Track(@"TestData\StraightEastWestLineTrack.txt");
+            t.Load();
+
+            // act
+            t.Simulate();
+
+            // assert
+            t.Render();
+            Assert.IsTrue(t.Carts[0].CurrentPosition.Equals(t.Carts[1].CurrentPosition));
+            Assert.AreEqual(new Coordinates(0, 5), t.Carts[0].CurrentPosition);
+            Assert.AreEqual(Heading.East, t.Carts[0].CurrentHeading);
+            Assert.AreEqual(Heading.West, t.Carts[1].CurrentHeading);
         }
     }
 }

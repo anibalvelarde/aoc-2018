@@ -70,8 +70,8 @@ namespace CartsAndTracks.Lib
             foreach (var cart in _carts)
             {
                 cart.Move(this);
+                _radar.DetectCrash(_carts);
             }
-            _radar.DetectCrash(_carts);
         }
 
         public void Simulate()
@@ -79,6 +79,7 @@ namespace CartsAndTracks.Lib
             while (!_radar.CrashDetected)
             {
                 Tick();
+                //Render();
             }
         }
 
@@ -152,13 +153,13 @@ namespace CartsAndTracks.Lib
                 case '<':
                     // cart detected heading west
                     HandleTrackDetection(row, col, '-');
-                    _carts.Add(new Cart(Heading.West, col, row));
+                    _carts.Add(new Cart(Heading.West, row, col));
                     break;
 
                 case '>':
                     // cart detected heading east
                     HandleTrackDetection(row, col, '-');
-                    _carts.Add(new Cart(Heading.West, row, col));
+                    _carts.Add(new Cart(Heading.East, row, col));
                     break;
 
                 case '^':

@@ -25,7 +25,10 @@ namespace CartsAndTracks.Lib
                     var cartList = new List<Cart>();
                     cartList.Add(currentCart);
                     cartList.Add(prevCart);
-                    _radar.Add(currentCart.CurrentPosition.ToKey(), cartList);
+                    if (!_radar.ContainsKey(currentCart.CurrentPosition.ToKey()))
+                    {
+                        _radar.Add(currentCart.CurrentPosition.ToKey(), cartList);
+                    }
                     CrashEm(cartList);
                 }
                 return l;
