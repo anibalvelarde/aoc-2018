@@ -75,6 +75,7 @@
     <Content Include="TestData\StraightNorthSouthLineTrack.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\MultipleLoopsMultipleCarts.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CartsAndTracks.Lib\CartsAndTracks.Lib.csproj">

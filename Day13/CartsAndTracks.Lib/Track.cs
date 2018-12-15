@@ -69,7 +69,21 @@ namespace CartsAndTracks.Lib
                 Console.WriteLine("");
             }
             Console.WriteLine("-----------------------------------");
+            Console.WriteLine(CrashReport());
+            Console.WriteLine("-----------------------------------");
             Console.WriteLine("");
+        }
+
+        private string CrashReport()
+        {
+            if (_radar.CrashDetected)
+            {
+                var loc = _radar.CrashLocations();
+                return $"Crash detected at location [x:{loc[0].X},y:{loc[0].Y}]";
+            } else
+            {
+                return "No crashes were detected.";
+            }
         }
 
         internal bool IsPavedNext(Heading h, Coordinates referencePosition)
@@ -107,7 +121,7 @@ namespace CartsAndTracks.Lib
             }
         }
 
-        public void Simulate(int tickLimit = 0)
+        public void Simulate(int tickLimit = 100)
         {
             var checkTickLimit = tickLimit > 0;
             while (!_radar.CrashDetected && (checkTickLimit && tickLimit > 0))
