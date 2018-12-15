@@ -48,8 +48,15 @@
 
         public void Move(Track t)
         {
-            Move(CurrentHeading);
-            if (!IsPaved(t)) throw new System.Exception($"Bad location [x: {CurrentPosition.X}  y: {CurrentPosition.Y}]");
+            var p = t.GetPointAt(CurrentPosition);
+            Steer((Pavement)p);
+            if (p.IsPavedWhenHeading(CurrentHeading))
+            {
+                Move(CurrentHeading);
+            } else
+            {
+                throw new System.Exception($"Tried moving to non-paved location [{CurrentHeading.ToString()}] of [x: {CurrentPosition.X}  y: {CurrentPosition.Y}]");
+            }
         }
         public void Crash()
         {
@@ -84,6 +91,53 @@
                         CurrentPosition = new Coordinates(x, y);
                         break;
                 } 
+            }
+        }
+        private void Steer(Pavement track)
+        {
+            if (!track.IsStraight)
+            {
+                switch (CurrentHeading)
+                {
+                    case Heading.North:
+                        if (track.CurvesRight(CurrentHeading))
+                        {
+                            CurrentHeading = Heading.East;
+                        } else if (track.CurvesLeft(CurrentHeading))
+                        {
+                            CurrentHeading = Heading.West;
+                        }
+                        break;
+                    case Heading.South:
+                        if (track.CurvesRight(CurrentHeading))
+                        {
+                            CurrentHeading = Heading.West;
+                        } else if (track.CurvesLeft(CurrentHeading))
+                        {
+                            CurrentHeading = Heading.East;
+                        }
+                        break;
+                    case Heading.East:
+                        if (track.CurvesRight(CurrentHeading))
+                        {
+                            CurrentHeading = Heading.South;
+                        } else if (track.CurvesLeft(CurrentHeading))
+                        {
+                            CurrentHeading = Heading.North;
+                        }
+                        break;
+                    case Heading.West:
+                        if (track.CurvesRight(CurrentHeading))
+                        {
+                            CurrentHeading = Heading.North;
+                        } else if (track.CurvesLeft(CurrentHeading))
+                        {
+                            CurrentHeading = Heading.South;
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

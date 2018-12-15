@@ -13,6 +13,11 @@ namespace CartsAndTracks.Lib
             _pavementShape = trackPiece;
         }
 
+        public override bool IsPavedWhenHeading(Heading direction)
+        {
+            return false;
+        }
+
         public override string Render()
         {
             return " ";

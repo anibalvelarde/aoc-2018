@@ -45,6 +45,7 @@
     <Compile Include="CrashDetector.cs" />
     <Compile Include="GridPoint.cs" />
     <Compile Include="Heading.cs" />
+    <Compile Include="NoGoZone.cs" />
     <Compile Include="OpenField.cs" />
     <Compile Include="Pavement.cs" />
     <Compile Include="Track.cs" />

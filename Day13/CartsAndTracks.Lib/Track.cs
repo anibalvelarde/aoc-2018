@@ -49,6 +49,10 @@ namespace CartsAndTracks.Lib
 
         public void Render()
         {
+            Console.WriteLine("");
+            Console.WriteLine("-----------------------------------");
+            Console.WriteLine($"--- Ticks Elapsed: [{TotalTicks}]");
+            Console.WriteLine("-----------------------------------");
             for (int i = 0; i < Length; i++)
             {
                 for (int j = 0; j < Width; j++)
@@ -64,6 +68,33 @@ namespace CartsAndTracks.Lib
                 }
                 Console.WriteLine("");
             }
+            Console.WriteLine("-----------------------------------");
+            Console.WriteLine("");
+        }
+
+        internal bool IsPavedNext(Heading h, Coordinates referencePosition)
+        {
+            var point = GetPointAt(referencePosition);
+            return point.IsPavedWhenHeading(h);
+        }
+
+        public GridPoint GetPointAt(Coordinates pos)
+        {
+            if (IsOffGrid(pos))
+            {
+                return new NoGoZone(pos);
+            }
+            else
+            {
+                return _grid[pos.X, pos.Y];
+            }
+        }
+
+        private bool IsOffGrid(Coordinates pos)
+        {
+            if (pos.X < 0 || pos.Y < 0) return true;
+            if ((pos.X > (Length - 1)) || (pos.Y > (Width - 1))) return true;
+            return false;
         }
 
         public void Tick()
@@ -83,7 +114,7 @@ namespace CartsAndTracks.Lib
             {
                 Tick();
                 tickLimit--;
-                //Render();
+                Render();
             }
         }
 

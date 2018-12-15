@@ -14,15 +14,18 @@ namespace CartsAndTracks.Tests
             int ticksLimit = 16;
             var t = new Track(@"TestData\SingleLoopTrackSingleCart.txt");
             t.Load();
+            var expPosKey = t.Carts[0].CurrentPosition.ToKey();
 
             // act
             t.Simulate(ticksLimit);
 
             // assert
             t.Render();
-            Assert.IsTrue(t.Carts[0].CurrentPosition.Equals(t.Carts[1].CurrentPosition));
-            Assert.AreEqual(Heading.South, t.Carts[0].CurrentHeading);
-            Assert.AreEqual(Heading.North, t.Carts[1].CurrentHeading);
+            Assert.AreEqual(1, t.Carts.Count);
+            Assert.AreEqual(Heading.West, t.Carts[0].CurrentHeading);
+            Assert.AreEqual(expPosKey, t.Carts[0].CurrentPosition.ToKey());
+            Assert.AreEqual(Heading.West, t.Carts[0].CurrentHeading);
+            Assert.AreEqual(ticksLimit, t.TotalTicks);
         }
 
         [TestMethod]

@@ -62,7 +62,12 @@
     <Content Include="TestData\SingleLoopTrackNoCarts.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestData\SingleLoopTrackSingleCart.txt" />
+    <Content Include="TestData\SingleLoopTrackMultipleCarts.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\SingleLoopTrackSingleCart.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\SingleLoopTrackCrashDetection.txt" />
     <Content Include="TestData\StraightEastWestLineTrack.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -25,5 +25,22 @@
         {
             return base.GetHashCode();
         }
+
+        public Coordinates MoveTowards(Heading direction)
+        {
+            switch (direction)
+            {
+                case Heading.North:
+                    return new Coordinates(X--, Y);
+                case Heading.South:
+                    return new Coordinates(X++, Y);
+                case Heading.East:
+                    return new Coordinates(X, Y++);
+                case Heading.West:
+                    return new Coordinates(X, Y--);
+                default:
+                    throw new System.Exception($"Connot move in [{direction}] direction.");
+            }
+        }
     }
 }
