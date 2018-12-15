@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -44,20 +45,51 @@ namespace CartsAndTracks.Lib
             }
         }
 
+        public void Render()
+        {
+            for (int i = 0; i < Length; i++)
+            {
+                for (int j = 0; j < Width; j++)
+                {
+                    var k = GetCartAtPoint(_grid[i,j].Point);
+                    if (k is null)
+                    {
+                        Console.Write(_grid[i, j].Render()); 
+                    } else
+                    {
+                        Console.Write(k.Render());
+                    }
+                }
+                Console.WriteLine("");
+            }
+        }
+
+        private Cart GetCartAtPoint(Coordinates p)
+        {
+            foreach (var c in _carts)
+            {
+                if (c.CurrentPosition.Equals(p))
+                {
+                    return c;
+                }
+            }
+            return null;
+        }
+
         private string[] BildTrackGrid()
         {
             // read data
             var trackData = File.ReadAllLines(_trackFile);
             // determine dimensions
-            Width = trackData.Length;
-            Length = trackData[0].Length; 
+            Width = trackData[0].Length;
+            Length = trackData.Length;
 
             _grid = new GridPoint[Length, Width];
             for (int i = 0; i < Length; i++)
             {
                 for (int j = 0; j < Width; j++)
                 {
-                    _grid[j, i] = new OpenField(' ', j, i);
+                    _grid[i, j] = new OpenField(' ', j, i);
                 }
             }
             return trackData;
@@ -75,8 +107,8 @@ namespace CartsAndTracks.Lib
                     case '>':
                     case '<':
                     case '^':
-                    case 'V':
-                        HandleCartDetection(col, row, elem);
+                    case 'v':
+                        HandleCartDetection(row, col, elem);
                         break;
 
                     case '|':
@@ -90,36 +122,37 @@ namespace CartsAndTracks.Lib
             }
         }
 
-        private void HandleTrackDetection(int col, int row, char elem)
+        private void HandleTrackDetection(int row, int col, char elem)
         {
-            _grid[col, row] = new Pavement(elem, col, row); ;
+            _grid[row, col] = new Pavement(elem, row, col);
         }
 
-        private void HandleCartDetection(int col, int row, char elem)
+        private void HandleCartDetection(int row, int col, char elem)
         {
             switch (elem)
             {
                 case '<':
                     // cart detected heading west
-                    HandleTrackDetection(col, row, '-');
+                    HandleTrackDetection(row, col, '-');
                     _carts.Add(new Cart(Heading.West, col, row));
                     break;
 
                 case '>':
                     // cart detected heading east
-                    HandleTrackDetection(col, row, '-');
-                    _carts.Add(new Cart(Heading.West, col, row));
+                    HandleTrackDetection(row, col, '-');
+                    _carts.Add(new Cart(Heading.West, row, col));
                     break;
 
                 case '^':
                     // cart detected heading north
-                    HandleTrackDetection(col, row, '|');
-                    _carts.Add(new Cart(Heading.North, col, row));
+                    HandleTrackDetection(row, col, '|');
+                    _carts.Add(new Cart(Heading.North, row, col));
                     break;
 
-                case 'V':
+                case 'v':
                     // cart detected heading south
-                    HandleTrackDetection(col, row, '|');
+                    HandleTrackDetection(row, col, '|');
+                    _carts.Add(new Cart(Heading.South, row, col));
                     break;
 
                 default:

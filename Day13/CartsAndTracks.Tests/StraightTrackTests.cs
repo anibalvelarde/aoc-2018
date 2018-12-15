@@ -17,12 +17,13 @@ namespace CartsAndTracks.Tests
             t.Load();
 
             // assert
-            Assert.AreEqual(7, t.Width);
-            Assert.AreEqual(1, t.Length);
+            t.Render();
+            Assert.AreEqual(7, t.Length);
+            Assert.AreEqual(1, t.Width);
             Assert.AreEqual(2, t.Carts.Count);
-            Assert.AreEqual(new Coordinates(0, 1), t.Carts[0].CurrentPosition);
+            Assert.IsTrue(t.Carts[0].CurrentPosition.Equals(new Coordinates(1, 0)));
             Assert.AreEqual(Heading.South, t.Carts[0].CurrentHeading);
-            Assert.AreEqual(new Coordinates(0, 5), t.Carts[1].CurrentPosition);
+            Assert.IsTrue(t.Carts[1].CurrentPosition.Equals(new Coordinates(5, 0)));
             Assert.AreEqual(Heading.North, t.Carts[1].CurrentHeading);
         }
     }

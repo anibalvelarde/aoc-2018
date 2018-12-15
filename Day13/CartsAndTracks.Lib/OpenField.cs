@@ -12,5 +12,10 @@ namespace CartsAndTracks.Lib
 
             _pavementShape = trackPiece;
         }
+
+        public override string Render()
+        {
+            return " ";
+        }
     }
 }

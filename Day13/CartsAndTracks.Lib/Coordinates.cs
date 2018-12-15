@@ -10,5 +10,15 @@
 
         public int X { get; private set; }
         public int Y { get; private set; }
+
+        public override bool Equals(object point)
+        {
+            return ((Coordinates)point).X.Equals(X) && ((Coordinates)point).Y.Equals(Y);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

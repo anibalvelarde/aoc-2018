@@ -8,6 +8,28 @@
             CurrentHeading = h;
         }
 
+        public string Render()
+        {
+            char shape = '\0';
+            switch (CurrentHeading)
+            {
+                case Heading.North:
+                    shape = '^';
+                    break;
+                case Heading.South:
+                    shape = 'v';
+                    break;
+                case Heading.East:
+                    shape = '>';
+                    break;
+                case Heading.West:
+                    shape = '<';
+                    break;
+                default:
+                    break;
+            }
+            return shape.ToString();
+        }
         public Heading CurrentHeading { get; private set; }
         public Coordinates CurrentPosition { get; private set; }
         public void Move(Heading h, int steps = 1)
