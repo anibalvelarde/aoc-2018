@@ -19,6 +19,7 @@ namespace CartsAndTracks.Lib
             _trackFile = trackFile;
         }
 
+        public int TotalTicks { get; private set; }
         public int Width { get; private set; }
         public int Length { get; private set; }
         public List<Cart> Carts
@@ -67,6 +68,7 @@ namespace CartsAndTracks.Lib
 
         public void Tick()
         {
+            TotalTicks++;
             foreach (var cart in _carts)
             {
                 cart.Move(this);
@@ -74,11 +76,13 @@ namespace CartsAndTracks.Lib
             }
         }
 
-        public void Simulate()
+        public void Simulate(int tickLimit = 0)
         {
-            while (!_radar.CrashDetected)
+            var checkTickLimit = tickLimit > 0;
+            while (!_radar.CrashDetected && (checkTickLimit && tickLimit > 0))
             {
                 Tick();
+                tickLimit--;
                 //Render();
             }
         }

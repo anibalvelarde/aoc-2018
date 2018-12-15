@@ -50,11 +50,20 @@
   <ItemGroup>
     <Compile Include="StraightTrackTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SingleLoopTrackTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="GenericTest1.GenericTest">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestData\SingleLoopTrackNoCarts.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\SingleLoopTrackSingleCart.txt" />
+    <Content Include="TestData\SingleLoopTrackCrashDetection.txt" />
     <Content Include="TestData\StraightEastWestLineTrack.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
