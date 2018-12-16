@@ -33,12 +33,13 @@ namespace Tree.Lib
             }
         }
 
-        private Node BuildNextChild(int index, input)
+        private Node BuildNextChild(int index, int[] input)
         {
-            if (())
-            {
-                var child = new Node(); 
-            }
+            //if (())
+            //{
+            //    var child = new Node(); 
+            //}
+            return null;
         }
 
         public Node BuildMyParent(int[] input)
