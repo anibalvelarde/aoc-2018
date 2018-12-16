@@ -88,7 +88,7 @@ namespace CartsAndTracks.Lib
                 var sb = new StringBuilder();
                 foreach (var crashedCart in _crashedCarts)
                 {
-                    sb.Append($"Crash detected at location [x:{crashedCart.CurrentPosition.Row},y:{crashedCart.CurrentPosition.Col}]");
+                    sb.Append($"Crash detected at location [x:{crashedCart.CurrentPosition.Col},y:{crashedCart.CurrentPosition.Row}]");
                     sb.Append('\n');
                 }
                 return sb.ToString();

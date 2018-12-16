@@ -76,7 +76,7 @@ namespace CartsAndTracks.Lib
         {
             var sb = new StringBuilder();
             sb.Append($"Cart:\n");
-            sb.Append($"  Location: [x:{CurrentPosition.Row} y:{CurrentPosition.Col}]");
+            sb.Append($"  Location: [x:{CurrentPosition.Col} y:{CurrentPosition.Row}]");
             sb.Append($"  Heading:  {CurrentHeading}");
             return sb.ToString();
         }

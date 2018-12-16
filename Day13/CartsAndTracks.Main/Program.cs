@@ -15,11 +15,11 @@ namespace CartsAndTracks.Main
         {
             // arrange
             int ticksLimit = 100000;
-            var t = new Track(@"data\foRealData.txt");
+            var t = new Track(@"data\foRealData.txt", ticksLimit: ticksLimit);
             t.Load();
 
             // act
-            t.Simulate(ticksLimit);
+            t.Simulate();
 
             // assert
             Clipboard.SetText(t.Render());

@@ -19,8 +19,12 @@ namespace CartsAndTracks.Tests
             t.Simulate();
 
             // assert
-            t.Render();
+            Console.WriteLine(t.Render());
             Assert.AreEqual(2, t.Carts.Count);
+            Assert.AreEqual(new Coordinates(7, 3), t.Carts[0].CurrentPosition);
+            Assert.IsTrue(t.Carts[0].IsCrashed);
+            Assert.AreEqual(new Coordinates(7, 3), t.Carts[1].CurrentPosition);
+            Assert.IsTrue(t.Carts[1].IsCrashed);
         }
 
         [TestMethod]
