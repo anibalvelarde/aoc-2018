@@ -156,7 +156,9 @@ namespace CartsAndTracks.Lib
         private Heading Trun(Heading currentHeading)
         {
             var nextTrun = _turnQueue.Dequeue();
-            return Steer(currentHeading, nextTrun);
+            var result = Steer(currentHeading, nextTrun);
+            _turnQueue.Enqueue(nextTrun);
+            return result;
         }
 
         private Heading Steer(Heading currentHeading, char nextTrun)

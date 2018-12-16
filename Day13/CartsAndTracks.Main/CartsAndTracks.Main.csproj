@@ -49,7 +49,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="data\foRealData.txt" />
+    <Content Include="data\foRealData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CartsAndTracks.Lib\CartsAndTracks.Lib.csproj">
+      <Project>{df53a78b-5319-49a4-98bf-e0fb687202b6}</Project>
+      <Name>CartsAndTracks.Lib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -74,7 +74,7 @@ namespace CartsAndTracks.Lib
             Console.WriteLine("");
         }
 
-        private string CrashReport()
+        public string CrashReport()
         {
             if (_radar.CrashDetected)
             {
