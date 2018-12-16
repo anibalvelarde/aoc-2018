@@ -6,9 +6,9 @@ namespace CartsAndTracks.Lib
 {
     public class Cart
     {
-        public Cart(Heading h, int x, int y)
+        public Cart(Heading h, int col, int row)
         {
-            CurrentPosition = new Coordinates(x, y);
+            CurrentPosition = new Coordinates(col, row);
             CurrentHeading = h;
             foreach (var elem in _turnSequence)
             {
@@ -65,7 +65,7 @@ namespace CartsAndTracks.Lib
                 Move(CurrentHeading);
             } else
             {
-                throw new System.Exception($"Tried moving to non-paved location [{CurrentHeading.ToString()}] of [x: {CurrentPosition.X}  y: {CurrentPosition.Y}]");
+                throw new System.Exception($"Tried moving to non-paved location [{CurrentHeading}] of [x: {CurrentPosition.Col}  y: {CurrentPosition.Row}]");
             }
         }
         public void Crash()
@@ -76,38 +76,38 @@ namespace CartsAndTracks.Lib
         {
             var sb = new StringBuilder();
             sb.Append($"Cart:\n");
-            sb.Append($"  Location: [x:{CurrentPosition.Y} y:{CurrentPosition.X}]");
+            sb.Append($"  Location: [x:{CurrentPosition.Row} y:{CurrentPosition.Col}]");
             sb.Append($"  Heading:  {CurrentHeading}");
             return sb.ToString();
         }
         
         private bool IsPaved(Track t)
         {
-            return ! (t.Grid[CurrentPosition.X, CurrentPosition.Y].Render().Equals(" "));
+            return ! (t.Grid[CurrentPosition.Col, CurrentPosition.Row].Render().Equals(" "));
         }
         private void Move(Heading h, int steps = 1)
         {
             if (!IsCrashed)
             {
                 CurrentHeading = h;
-                var x = CurrentPosition.X; var y = CurrentPosition.Y;
+                var col = CurrentPosition.Col; var row = CurrentPosition.Row;
                 switch (h)
                 {
                     case Heading.North:
-                        x--;
-                        CurrentPosition = new Coordinates(x, y);
+                        row--;
+                        CurrentPosition = new Coordinates(col, row);
                         break;
                     case Heading.South:
-                        x++;
-                        CurrentPosition = new Coordinates(x, y);
+                        row++;
+                        CurrentPosition = new Coordinates(col, row);
                         break;
                     case Heading.East:
-                        y++;
-                        CurrentPosition = new Coordinates(x, y);
+                        col++;
+                        CurrentPosition = new Coordinates(col, row);
                         break;
                     case Heading.West:
-                        y--;
-                        CurrentPosition = new Coordinates(x, y);
+                        col--;
+                        CurrentPosition = new Coordinates(col, row);
                         break;
                 } 
             }

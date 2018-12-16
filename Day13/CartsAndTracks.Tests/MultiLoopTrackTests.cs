@@ -12,11 +12,11 @@ namespace CartsAndTracks.Tests
         {
             // arrange
             int ticksLimit = 100000;
-            var t = new Track(@"TestData\MultipleLoopsMultipleCarts.txt");
+            var t = new Track(@"TestData\MultipleLoopsMultipleCarts.txt", cleanUpCrashSetting: false, ticksLimit: ticksLimit);
             t.Load();
 
             // act
-            t.Simulate(ticksLimit);
+            t.Simulate();
 
             // assert
             t.Render();
@@ -28,11 +28,11 @@ namespace CartsAndTracks.Tests
         {
             // arrange
             int ticksLimit = 100000;
-            var t = new Track(@"TestData\MultipleLoopsMultipleCartsPart2.txt");
+            var t = new Track(@"TestData\MultipleLoopsMultipleCartsPart2.txt", ticksLimit: ticksLimit);
             t.Load();
 
             // act
-            t.Simulate(ticksLimit);
+            t.Simulate();
 
             // assert
             Console.WriteLine("-----------------------------------");
@@ -42,6 +42,7 @@ namespace CartsAndTracks.Tests
             Console.WriteLine($"  Total Ticks: {t.TotalTicks}");
             Console.WriteLine("-----------------------------------");
             Console.WriteLine("");
+            Console.WriteLine(t.Render());
             Assert.AreEqual(1, t.Carts.Count);
         }
     }

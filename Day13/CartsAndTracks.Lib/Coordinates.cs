@@ -2,23 +2,23 @@
 {
     public class Coordinates
     {
-        public Coordinates(int x, int y)
+        public Coordinates(int col, int row)
         {
-            X = x;
-            Y = y;
+            Col = col;
+            Row = row;
         }
 
-        public int X { get; private set; }
-        public int Y { get; private set; }
+        public int Col { get; private set; }
+        public int Row { get; private set; }
 
         public string ToKey()
         {
-            return $"[x:{X}-y:{Y}]";
+            return $"[x:{Col}-y:{Row}]";
         }
 
         public override bool Equals(object point)
         {
-            return ((Coordinates)point).X.Equals(X) && ((Coordinates)point).Y.Equals(Y);
+            return ((Coordinates)point).Col.Equals(Col) && ((Coordinates)point).Row.Equals(Row);
         }
 
         public override int GetHashCode()
@@ -31,13 +31,13 @@
             switch (direction)
             {
                 case Heading.North:
-                    return new Coordinates(X--, Y);
+                    return new Coordinates(Col--, Row);
                 case Heading.South:
-                    return new Coordinates(X++, Y);
+                    return new Coordinates(Col++, Row);
                 case Heading.East:
-                    return new Coordinates(X, Y++);
+                    return new Coordinates(Col, Row++);
                 case Heading.West:
-                    return new Coordinates(X, Y--);
+                    return new Coordinates(Col, Row--);
                 default:
                     throw new System.Exception($"Connot move in [{direction}] direction.");
             }

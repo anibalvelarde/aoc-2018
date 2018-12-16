@@ -12,7 +12,7 @@ namespace CartsAndTracks.Lib
             :base (x, y) { }
 
         public NoGoZone(Coordinates pos)
-            : base(pos.X, pos.Y) { }
+            : base(pos.Col, pos.Row) { }
 
         public override bool IsPavedWhenHeading(Heading direction)
         {

@@ -15,14 +15,18 @@ namespace CartsAndTracks.Lib
         private List<Cart> _crashedCarts = new List<Cart>();
         private CrashDetector _radar = new CrashDetector();
 
-        public Track(string trackFile)
+        public Track(string trackFile, bool cleanUpCrashSetting = true, int ticksLimit = -1)
         {
             _trackFile = trackFile;
+            NeedsToCleanUpCartPileup = cleanUpCrashSetting;
+            TicksLimit = ticksLimit;
         }
 
+        public int TicksLimit { get; private set; }
+        public bool NeedsToCleanUpCartPileup { get; private set; }
         public int TotalTicks { get; private set; }
-        public int Width { get; private set; }
-        public int Length { get; private set; }
+        public int Rows { get; private set; }
+        public int Columns { get; private set; }
         public List<Cart> Carts
         {
             get
@@ -42,7 +46,7 @@ namespace CartsAndTracks.Lib
         {
             string[] trackData = BildTrackGrid();
 
-            for (int row = 0; row < Length; row++)
+            for (int row = 0; row < Rows; row++)
             {
                 ProcessTrackLayout(row, trackData[row]);
             }
@@ -55,14 +59,14 @@ namespace CartsAndTracks.Lib
             sb.Append("-----------------------------------");sb.AppendLine();
             sb.Append($"--- Ticks Elapsed: [{TotalTicks}]"); sb.AppendLine();
             sb.Append("-----------------------------------"); sb.AppendLine();
-            for (int i = 0; i < Length; i++)
+            for (int col = 0; col < Columns; col++)
             {
-                for (int j = 0; j < Width; j++)
+                for (int row = 0; row < Rows; row++)
                 {
-                    var k = GetCartAtPoint(_grid[i,j].Point);
+                    var k = GetCartAtPoint(_grid[col, row].Point);
                     if (k is null)
                     {
-                        sb.Append(_grid[i, j].Render()); 
+                        sb.Append(_grid[col, row].Render()); 
                     } else
                     {
                         sb.Append(k.Render());
@@ -84,7 +88,7 @@ namespace CartsAndTracks.Lib
                 var sb = new StringBuilder();
                 foreach (var crashedCart in _crashedCarts)
                 {
-                    sb.Append($"Crash detected at location [x:{crashedCart.CurrentPosition.Y},y:{crashedCart.CurrentPosition.X}]");
+                    sb.Append($"Crash detected at location [x:{crashedCart.CurrentPosition.Row},y:{crashedCart.CurrentPosition.Col}]");
                     sb.Append('\n');
                 }
                 return sb.ToString();
@@ -108,14 +112,14 @@ namespace CartsAndTracks.Lib
             }
             else
             {
-                return _grid[pos.X, pos.Y];
+                return _grid[pos.Col, pos.Row];
             }
         }
 
         private bool IsOffGrid(Coordinates pos)
         {
-            if (pos.X < 0 || pos.Y < 0) return true;
-            if ((pos.X > (Length - 1)) || (pos.Y > (Width - 1))) return true;
+            if (pos.Col < 0 || pos.Row < 0) return true;
+            if ((pos.Col > (Columns - 1)) || (pos.Row > (Rows - 1))) return true;
             return false;
         }
 
@@ -130,34 +134,46 @@ namespace CartsAndTracks.Lib
             }
         }
 
-        public void Simulate(int tickLimit = 100)
+        public void Simulate()
         {
-            var lastTick = false;
+            var isLastTick = false;
             while (true)
             {
                 Tick();
-                tickLimit--;
                 if (_radar.CrashDetected)
                 {
-                    var crashedCarts = _radar.CrashedCarts();
-                    foreach (var cart in crashedCarts)
+                    if (NeedsToCleanUpCartPileup)
                     {
-                        HandleCrashDetection(cart);
-                    }
-                    if (_carts.Count.Equals(1))
-                    {
-                        if (!lastTick)
-                        {
-                            lastTick = true;
-                        } else
-                        {
-                            break;
-                        }
+                        isLastTick = CleanUpCrashSite();
+                        if (isLastTick) break;
                     }
                 }
+                if (NeedsToExit()) break;
             }
         }
 
+        private bool NeedsToExit()
+        {
+            var needsToExit = false;
+            TicksLimit--;
+            if (TicksLimit.Equals(0)) needsToExit = true;
+            return needsToExit;
+        }
+
+        private bool CleanUpCrashSite()
+        {
+            var crashedCarts = _radar.CrashedCarts();
+            foreach (var cart in crashedCarts)
+            {
+                HandleCrashDetection(cart);
+            }
+            // last cart left on the track?
+            if (_carts.Count.Equals(1))
+            {
+                return true;
+            }
+            return false;
+        }
         private void HandleCrashDetection(Cart cart)
         {
             _carts.Remove(cart);
@@ -168,8 +184,8 @@ namespace CartsAndTracks.Lib
         private List<Cart> GetSortedCarts()
         {
             return _carts
-                .OrderBy(x => x.CurrentPosition.X)
-                .ThenByDescending(x => x.CurrentPosition.Y)
+                .OrderBy(r => r.CurrentPosition.Row)
+                .ThenByDescending(c => c.CurrentPosition.Col)
                 .ToList();
         }
 
@@ -190,15 +206,15 @@ namespace CartsAndTracks.Lib
             // read data
             var trackData = File.ReadAllLines(_trackFile);
             // determine dimensions
-            Width = trackData[0].Length;
-            Length = trackData.Length;
+            Rows = trackData.Length;
+            Columns = trackData[0].Length; 
 
-            _grid = new GridPoint[Length, Width];
-            for (int i = 0; i < Length; i++)
+            _grid = new GridPoint[Columns, Rows];
+            for (int col = 0; col < Columns; col++)
             {
-                for (int j = 0; j < Width; j++)
+                for (int row = 0; row < Rows; row++)
                 {
-                    _grid[j, i] = new OpenField(' ', j, i);
+                    _grid[col, row] = new OpenField(' ', col, row);
                 }
             }
             return trackData;
@@ -217,7 +233,7 @@ namespace CartsAndTracks.Lib
                     case '<':
                     case '^':
                     case 'v':
-                        HandleCartDetection(row, col, elem);
+                        HandleCartDetection(col, row, elem);
                         break;
 
                     case '|':
@@ -225,43 +241,43 @@ namespace CartsAndTracks.Lib
                     case '/':
                     case '\\':
                     case '+':
-                        HandleTrackDetection(row, col, elem);
+                        HandleTrackDetection(col, row, elem);
                         break;
                 }
             }
         }
 
-        private void HandleTrackDetection(int row, int col, char elem)
+        private void HandleTrackDetection(int col, int row, char elem)
         {
-            _grid[row, col] = new Pavement(elem, row, col);
+            _grid[col, row] = new Pavement(elem, col, row);
         }
 
-        private void HandleCartDetection(int row, int col, char elem)
+        private void HandleCartDetection(int col, int row, char elem)
         {
             switch (elem)
             {
                 case '<':
                     // cart detected heading west
-                    HandleTrackDetection(row, col, '-');
-                    _carts.Add(new Cart(Heading.West, row, col));
+                    HandleTrackDetection(col, row, '-');
+                    _carts.Add(new Cart(Heading.West, col, row));
                     break;
 
                 case '>':
                     // cart detected heading east
-                    HandleTrackDetection(row, col, '-');
-                    _carts.Add(new Cart(Heading.East, row, col));
+                    HandleTrackDetection(col, row, '-');
+                    _carts.Add(new Cart(Heading.East, col, row));
                     break;
 
                 case '^':
                     // cart detected heading north
-                    HandleTrackDetection(row, col, '|');
-                    _carts.Add(new Cart(Heading.North, row, col));
+                    HandleTrackDetection(col, row, '|');
+                    _carts.Add(new Cart(Heading.North, col, row));
                     break;
 
                 case 'v':
                     // cart detected heading south
-                    HandleTrackDetection(row, col, '|');
-                    _carts.Add(new Cart(Heading.South, row, col));
+                    HandleTrackDetection(col, row, '|');
+                    _carts.Add(new Cart(Heading.South, col, row));
                     break;
 
                 default:
