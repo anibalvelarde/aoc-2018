@@ -51,6 +51,7 @@
     <Compile Include="StraightTrackTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingleLoopTrackTests.cs" />
+    <Compile Include="MultiLoopTrackTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GenericTest1.GenericTest">
@@ -75,7 +76,9 @@
     <Content Include="TestData\StraightNorthSouthLineTrack.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestData\MultipleLoopsMultipleCarts.txt" />
+    <Content Include="TestData\MultipleLoopsMultipleCarts.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CartsAndTracks.Lib\CartsAndTracks.Lib.csproj">

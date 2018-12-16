@@ -128,7 +128,7 @@ namespace CartsAndTracks.Lib
             {
                 Tick();
                 tickLimit--;
-                Render();
+                //Render();
             }
         }
 
