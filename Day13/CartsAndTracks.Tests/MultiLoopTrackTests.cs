@@ -42,7 +42,7 @@ namespace CartsAndTracks.Tests
             Console.WriteLine($"  Total Ticks: {t.TotalTicks}");
             Console.WriteLine("-----------------------------------");
             Console.WriteLine("");
-            Assert.AreEqual(2, t.Carts.Count);
+            Assert.AreEqual(1, t.Carts.Count);
         }
     }
 }

@@ -142,9 +142,7 @@ namespace CartsAndTracks.Lib
                     var crashedCarts = _radar.CrashedCarts();
                     foreach (var cart in crashedCarts)
                     {
-                        _carts.Remove(cart);
-                        _crashedCarts.Add(cart);
-                        _radar.ClearCrashSite();
+                        HandleCrashDetection(cart);
                     }
                     if (_carts.Count.Equals(1))
                     {
@@ -158,6 +156,13 @@ namespace CartsAndTracks.Lib
                     }
                 }
             }
+        }
+
+        private void HandleCrashDetection(Cart cart)
+        {
+            _carts.Remove(cart);
+            _crashedCarts.Add(cart);
+            _radar.ClearCrashSite();
         }
 
         private List<Cart> GetSortedCarts()
@@ -193,7 +198,7 @@ namespace CartsAndTracks.Lib
             {
                 for (int j = 0; j < Width; j++)
                 {
-                    _grid[i, j] = new OpenField(' ', j, i);
+                    _grid[j, i] = new OpenField(' ', j, i);
                 }
             }
             return trackData;
