@@ -79,7 +79,7 @@ namespace CartsAndTracks.Lib
             if (_radar.CrashDetected)
             {
                 var loc = _radar.CrashLocations();
-                return $"Crash detected at location [x:{loc[0].X},y:{loc[0].Y}]";
+                return $"Crash detected at location [x:{loc[0].Y},y:{loc[0].X}]";
             } else
             {
                 return "No crashes were detected.";
