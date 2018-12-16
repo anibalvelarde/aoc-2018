@@ -1,4 +1,7 @@
-﻿namespace CartsAndTracks.Lib
+﻿using System;
+using System.Collections.Generic;
+
+namespace CartsAndTracks.Lib
 {
     public class Cart
     {
@@ -6,6 +9,10 @@
         {
             CurrentPosition = new Coordinates(x, y);
             CurrentHeading = h;
+            foreach (var elem in _turnSequence)
+            {
+                _turnQueue.Enqueue(elem);
+            }
         }
 
         public string Render()
@@ -45,6 +52,8 @@
         public Heading CurrentHeading { get; private set; }
         public Coordinates CurrentPosition { get; private set; }
         public bool IsCrashed { get; private set; }
+        private char[] _turnSequence = { 'L', 'S', 'R' };
+        private Queue<char> _turnQueue = new Queue<char>();
 
         public void Move(Track t)
         {
@@ -138,7 +147,41 @@
                     default:
                         break;
                 }
+            } else if (track.IsIntersection)
+            {
+                CurrentHeading = Trun(CurrentHeading);
             }
+        }
+
+        private Heading Trun(Heading currentHeading)
+        {
+            var nextTrun = _turnQueue.Dequeue();
+            return Steer(currentHeading, nextTrun);
+        }
+
+        private Heading Steer(Heading currentHeading, char nextTrun)
+        {
+            Heading newHeading = currentHeading; 
+            switch (currentHeading)
+            {
+                case Heading.North:
+                    if (nextTrun.Equals('L')) return Heading.West;
+                    if (nextTrun.Equals('R')) return Heading.East;
+                    break;
+                case Heading.South:
+                    if (nextTrun.Equals('L')) return Heading.East;
+                    if (nextTrun.Equals('R')) return Heading.West;
+                    break;
+                case Heading.East:
+                    if (nextTrun.Equals('L')) return Heading.North;
+                    if (nextTrun.Equals('R')) return Heading.South;
+                    break;
+                case Heading.West:
+                    if (nextTrun.Equals('L')) return Heading.South;
+                    if (nextTrun.Equals('R')) return Heading.North;
+                    break;
+            }
+            return newHeading;
         }
     }
 }

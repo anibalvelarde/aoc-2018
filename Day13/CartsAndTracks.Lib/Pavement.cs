@@ -30,6 +30,14 @@ namespace CartsAndTracks.Lib
             }
         }
 
+        public bool IsIntersection
+        {
+            get
+            {
+                return _pavementShape.Equals('+');
+            }
+        }
+
         public override bool IsPavedWhenHeading(Heading direction)
         {
             var isPaved = false;
