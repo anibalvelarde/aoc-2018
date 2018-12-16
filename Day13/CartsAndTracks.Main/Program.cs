@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CartsAndTracks.Lib;
+using System.Windows.Forms;
 
 namespace CartsAndTracks.Main
 {
     class Program
     {
+        [STAThreadAttribute]
         static void Main(string[] args)
         {
             // arrange
@@ -20,8 +22,12 @@ namespace CartsAndTracks.Main
             t.Simulate(ticksLimit);
 
             // assert
+            Clipboard.SetText(t.Render());
             Console.WriteLine("-----------------------------------");
             Console.WriteLine(t.CrashReport());
+            Console.WriteLine("-----------------------------------");
+            Console.WriteLine(t.Carts[0].ToString());
+            Console.WriteLine($"  Total Ticks: {t.TotalTicks}");
             Console.WriteLine("-----------------------------------");
             Console.WriteLine("");
             Console.ReadKey();

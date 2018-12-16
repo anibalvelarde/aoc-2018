@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace CartsAndTracks.Lib
 {
@@ -71,6 +72,15 @@ namespace CartsAndTracks.Lib
         {
             IsCrashed = true;
         }
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append($"Cart:\n");
+            sb.Append($"  Location: [x:{CurrentPosition.Y} y:{CurrentPosition.X}]");
+            sb.Append($"  Heading:  {CurrentHeading}");
+            return sb.ToString();
+        }
+        
         private bool IsPaved(Track t)
         {
             return ! (t.Grid[CurrentPosition.X, CurrentPosition.Y].Render().Equals(" "));

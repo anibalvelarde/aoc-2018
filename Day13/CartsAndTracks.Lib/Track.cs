@@ -12,6 +12,7 @@ namespace CartsAndTracks.Lib
         private readonly string _trackFile;
         private GridPoint[,] _grid;
         private List<Cart> _carts = new List<Cart>();
+        private List<Cart> _crashedCarts = new List<Cart>();
         private CrashDetector _radar = new CrashDetector();
 
         public Track(string trackFile)
@@ -47,12 +48,13 @@ namespace CartsAndTracks.Lib
             }
         }
 
-        public void Render()
+        public string Render()
         {
-            Console.WriteLine("");
-            Console.WriteLine("-----------------------------------");
-            Console.WriteLine($"--- Ticks Elapsed: [{TotalTicks}]");
-            Console.WriteLine("-----------------------------------");
+            var sb = new StringBuilder();
+            sb.Append(""); sb.AppendLine();
+            sb.Append("-----------------------------------");sb.AppendLine();
+            sb.Append($"--- Ticks Elapsed: [{TotalTicks}]"); sb.AppendLine();
+            sb.Append("-----------------------------------"); sb.AppendLine();
             for (int i = 0; i < Length; i++)
             {
                 for (int j = 0; j < Width; j++)
@@ -60,26 +62,32 @@ namespace CartsAndTracks.Lib
                     var k = GetCartAtPoint(_grid[i,j].Point);
                     if (k is null)
                     {
-                        Console.Write(_grid[i, j].Render()); 
+                        sb.Append(_grid[i, j].Render()); 
                     } else
                     {
-                        Console.Write(k.Render());
+                        sb.Append(k.Render());
                     }
                 }
-                Console.WriteLine("");
+                sb.Append(""); sb.AppendLine();
             }
-            Console.WriteLine("-----------------------------------");
-            Console.WriteLine(CrashReport());
-            Console.WriteLine("-----------------------------------");
-            Console.WriteLine("");
+            sb.Append("-----------------------------------"); sb.AppendLine();
+            sb.Append(CrashReport()); sb.AppendLine();
+            sb.Append("-----------------------------------"); sb.AppendLine();
+            sb.Append(""); sb.AppendLine();
+            return sb.ToString();
         }
 
         public string CrashReport()
         {
             if (_radar.CrashDetected)
             {
-                var loc = _radar.CrashLocations();
-                return $"Crash detected at location [x:{loc[0].Y},y:{loc[0].X}]";
+                var sb = new StringBuilder();
+                foreach (var crashedCart in _crashedCarts)
+                {
+                    sb.Append($"Crash detected at location [x:{crashedCart.CurrentPosition.Y},y:{crashedCart.CurrentPosition.X}]");
+                    sb.Append('\n');
+                }
+                return sb.ToString();
             } else
             {
                 return "No crashes were detected.";
@@ -114,7 +122,8 @@ namespace CartsAndTracks.Lib
         public void Tick()
         {
             TotalTicks++;
-            foreach (var cart in _carts)
+            var sortedCartList = GetSortedCarts();
+            foreach (var cart in sortedCartList)
             {
                 cart.Move(this);
                 _radar.DetectCrash(_carts);
@@ -123,13 +132,40 @@ namespace CartsAndTracks.Lib
 
         public void Simulate(int tickLimit = 100)
         {
-            var checkTickLimit = tickLimit > 0;
-            while (!_radar.CrashDetected && (checkTickLimit && tickLimit > 0))
+            var lastTick = false;
+            while (true)
             {
                 Tick();
                 tickLimit--;
-                //Render();
+                if (_radar.CrashDetected)
+                {
+                    var crashedCarts = _radar.CrashedCarts();
+                    foreach (var cart in crashedCarts)
+                    {
+                        _carts.Remove(cart);
+                        _crashedCarts.Add(cart);
+                        _radar.ClearCrashSite();
+                    }
+                    if (_carts.Count.Equals(1))
+                    {
+                        if (!lastTick)
+                        {
+                            lastTick = true;
+                        } else
+                        {
+                            break;
+                        }
+                    }
+                }
             }
+        }
+
+        private List<Cart> GetSortedCarts()
+        {
+            return _carts
+                .OrderBy(x => x.CurrentPosition.X)
+                .ThenByDescending(x => x.CurrentPosition.Y)
+                .ToList();
         }
 
         private Cart GetCartAtPoint(Coordinates p)

@@ -60,6 +60,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestData\MultipleLoopsMultipleCartsPart2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\SingleLoopTrackNoCarts.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

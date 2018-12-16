@@ -44,6 +44,24 @@ namespace CartsAndTracks.Lib
                     .ToList();
         }
 
+        public List<Cart> CrashedCarts()
+        {
+            return _radar
+                .Where(x => x.Value.Count > 1)
+                .Select(x => x.Value)
+                .Aggregate(new List<Cart>(), (cartPileup, crashSite) =>
+                {
+                    return cartPileup
+                        .Union(crashSite)
+                        .ToList();
+                });
+        }
+
+        public void ClearCrashSite()
+        {
+            _radar.Clear();
+        }
+
         private void CrashEm(List<Cart> carts)
         {
             foreach (var c in carts)
