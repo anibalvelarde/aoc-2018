@@ -48,11 +48,18 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="OpCodeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PuzzleOneTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Classification.Lib\Classification.Lib.csproj">
+      <Project>{c1e7707a-f7d4-4ba2-ba28-d3897b2d7d41}</Project>
+      <Name>Classification.Lib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

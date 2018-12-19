@@ -1,0 +1,22 @@
+
+Operation  opEqir  ---->   0
+Operation  opEqri  ---->   7
+Operation  opEqrr  ---->  11
+Operation  opGtri  ---->  13
+Operation  opGtrr  ---->  10
+Operation  opGtir  ---->   2
+Operation  stir    ---->   3
+Operation  opBani  ---->   9
+Operation  opBanr  ---->  15
+Operation  seti    ---->   5
+Operation  opMulr  ---->   4
+Operation  opBorr  ---->  14
+Operation  opBori  ---->   8
+Operation  addi    ---->   1
+Operation  addr    ---->  12
+Operation  opMuli  ---->   6
+
+
+
+
+

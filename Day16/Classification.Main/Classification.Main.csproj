@@ -48,5 +48,19 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="data\sampleRegisterData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\smallProgram.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Classification.Lib\Classification.Lib.csproj">
+      <Project>{c1e7707a-f7d4-4ba2-ba28-d3897b2d7d41}</Project>
+      <Name>Classification.Lib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
